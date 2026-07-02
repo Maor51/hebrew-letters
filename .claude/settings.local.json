@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash *)",
+      "Bash(dir \"C:\\\\Python\\\\Rom\\\\HebrewLetters\" /A)",
+      "PowerShell(Set-Location \"C:\\\\Python\\\\Rom\\\\HebrewLetters\"; $env:npm_config_yes = \"true\"; npx create-vite@latest . --template react 2>&1)",
+      "Bash(npx create-vite@latest . --template react)",
+      "Bash(npx --yes create-vite@latest . --template react)",
+      "Bash(npx create-vite@latest --help)",
+      "Bash(npx create-vite@latest . --template react --overwrite)",
+      "Bash(npm install *)"
+    ]
+  }
+}
