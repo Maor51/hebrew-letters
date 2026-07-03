@@ -39,7 +39,7 @@ export function LetterView() {
   if (!letter) return null
 
   const gradient = `linear-gradient(160deg, ${letter.color}, ${GRADIENT_END[letter.color]})`
-  const visiblePaths = letter.imagePaths.filter((_, i) => !imgErrors.has(i))
+  const hasVisibleImage = letter.imagePaths.some((_, i) => !imgErrors.has(i))
 
   return (
     <div className="min-h-screen" style={{ background: '#FFF5E6' }}>
@@ -88,7 +88,7 @@ export function LetterView() {
         className="mx-4 mb-6 cursor-pointer select-none"
         onClick={() => playAudio(letter.audioWordPath)}
       >
-        {visiblePaths.length > 0 ? (
+        {hasVisibleImage ? (
           <div style={{ display: 'flex', gap: '10px' }}>
             {letter.imagePaths.map((src, i) =>
               imgErrors.has(i) ? null : (

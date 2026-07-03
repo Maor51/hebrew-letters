@@ -56,4 +56,7 @@ describe('LetterView', () => {
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
     expect(screen.getByText('🖼️')).toBeInTheDocument()
   })
+
+  // Note: partial image failure with multiple images (imagePaths.length > 1) is
+  // tested when multi-image letter entries are added to letters.json.
 })
