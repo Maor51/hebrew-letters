@@ -27,7 +27,7 @@ describe('MainMenu', () => {
 
   it('renders the play button', () => {
     renderMainMenu()
-    expect(screen.getByRole('button', { name: 'התחל' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'התחל לשחק' })).toBeInTheDocument()
   })
 
   it('renders 22 progress dots', () => {
@@ -44,5 +44,15 @@ describe('MainMenu', () => {
     localStorage.setItem('alefbet-progress', JSON.stringify(['alef', 'bet', 'gimel']))
     renderMainMenu()
     expect(screen.getByText('3 / 22 אותיות')).toBeInTheDocument()
+  })
+
+  it('marks visited letters with data-visited="true" on their dot', () => {
+    localStorage.setItem('alefbet-progress', JSON.stringify(['alef']))
+    renderMainMenu()
+    const dots = screen.getAllByTestId('progress-dot')
+    const visitedDots = dots.filter((d) => d.getAttribute('data-visited') === 'true')
+    const unvisitedDots = dots.filter((d) => d.getAttribute('data-visited') === 'false')
+    expect(visitedDots).toHaveLength(1)
+    expect(unvisitedDots).toHaveLength(21)
   })
 })

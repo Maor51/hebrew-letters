@@ -28,6 +28,7 @@ export function MainMenu() {
 
         <button
           onClick={() => navigate('/play')}
+          aria-label="התחל לשחק"
           className="font-bold text-white"
           style={{
             background: 'linear-gradient(135deg, #FFB347, #FF8C69)',
@@ -46,6 +47,7 @@ export function MainMenu() {
             <div
               key={letter.id}
               data-testid="progress-dot"
+              data-visited={isVisited(letter.id) ? 'true' : 'false'}
               style={{
                 width: '14px',
                 height: '14px',
