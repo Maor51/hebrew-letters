@@ -26,12 +26,14 @@ export function LetterView() {
   const [imgError, setImgError] = useState(false)
 
   useEffect(() => {
+    let timer
     if (!isVisited(id)) {
       setShowConfetti(true)
-      setTimeout(() => setShowConfetti(false), 2500)
+      timer = setTimeout(() => setShowConfetti(false), 2500)
     }
     markVisited(id)
     setImgError(false)
+    return () => clearTimeout(timer)
   }, [id])
 
   if (!letter) return null
