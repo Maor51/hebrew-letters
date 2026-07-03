@@ -7,7 +7,7 @@ const mockLetter = {
   name: 'אָלֶף',
   word: 'אַרְיֵה',
   color: '#FFB347',
-  imagePath: '/images/alef.png',
+  imagePaths: ['/images/alef.png'],
   audioLetterPath: '/audio/alef.mp3',
   audioWordPath: '/audio/word-alef.mp3',
 }

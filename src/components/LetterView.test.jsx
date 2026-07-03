@@ -40,19 +40,20 @@ describe('LetterView', () => {
     expect(stored).toContain('alef')
   })
 
-  it('renders an image element for the letter illustration', () => {
+  it('renders an image for each path in imagePaths', () => {
     renderLetterView('alef')
-    const img = screen.getByRole('img')
-    expect(img).toHaveAttribute('src', '/images/alef.png')
+    const imgs = screen.getAllByRole('img')
+    expect(imgs).toHaveLength(1)
+    expect(imgs[0]).toHaveAttribute('src', '/images/alef.png')
   })
 
-  it('shows placeholder when image fails to load', async () => {
+  it('shows placeholder when all images fail to load', async () => {
     renderLetterView('alef')
     const img = screen.getByRole('img')
     await act(async () => {
       img.dispatchEvent(new Event('error'))
     })
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
-    expect(screen.getByText('/images/alef.png')).toBeInTheDocument()
+    expect(screen.getByText('🖼️')).toBeInTheDocument()
   })
 })

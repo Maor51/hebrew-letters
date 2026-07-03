@@ -23,7 +23,7 @@ export function LetterView() {
   const letter = letters.find((l) => l.id === id)
   const { isVisited, markVisited } = useProgress()
   const [showConfetti, setShowConfetti] = useState(false)
-  const [imgError, setImgError] = useState(false)
+  const [imgErrors, setImgErrors] = useState(new Set())
 
   useEffect(() => {
     let timer
@@ -32,13 +32,14 @@ export function LetterView() {
       timer = setTimeout(() => setShowConfetti(false), 2500)
     }
     markVisited(id)
-    setImgError(false)
+    setImgErrors(new Set())
     return () => clearTimeout(timer)
   }, [id])
 
   if (!letter) return null
 
   const gradient = `linear-gradient(160deg, ${letter.color}, ${GRADIENT_END[letter.color]})`
+  const visiblePaths = letter.imagePaths.filter((_, i) => !imgErrors.has(i))
 
   return (
     <div className="min-h-screen" style={{ background: '#FFF5E6' }}>
@@ -82,33 +83,42 @@ export function LetterView() {
         </p>
       </div>
 
-      {/* Image area — tap to hear word */}
+      {/* Image row — tap to hear word */}
       <div
-        className="mx-4 mb-6 rounded-2xl overflow-hidden cursor-pointer select-none"
-        style={{ minHeight: '200px' }}
+        className="mx-4 mb-6 cursor-pointer select-none"
         onClick={() => playAudio(letter.audioWordPath)}
       >
-        {!imgError ? (
-          <img
-            src={letter.imagePath}
-            alt={letter.word}
-            className="w-full object-cover"
-            style={{ minHeight: '200px', display: 'block' }}
-            onError={() => setImgError(true)}
-          />
+        {visiblePaths.length > 0 ? (
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {letter.imagePaths.map((src, i) =>
+              imgErrors.has(i) ? null : (
+                <img
+                  key={src}
+                  src={src}
+                  alt={letter.word}
+                  style={{
+                    flex: 1,
+                    height: '160px',
+                    objectFit: 'contain',
+                    borderRadius: '12px',
+                    display: 'block',
+                  }}
+                  onError={() => setImgErrors((prev) => new Set([...prev, i]))}
+                />
+              )
+            )}
+          </div>
         ) : (
           <div
             className="w-full flex flex-col items-center justify-center gap-2"
             style={{
-              minHeight: '200px',
+              height: '160px',
               background: 'linear-gradient(135deg, #FFE0B2, #FFCC80)',
               border: '2px dashed #FFB347',
+              borderRadius: '12px',
             }}
           >
             <span style={{ fontSize: '40px', opacity: 0.5 }}>🖼️</span>
-            <span className="text-sm font-medium" style={{ color: '#A0856C' }}>
-              {letter.imagePath}
-            </span>
           </div>
         )}
       </div>
