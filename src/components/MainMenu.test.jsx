@@ -1,7 +1,12 @@
-import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { ProgressProvider } from '../contexts/ProgressContext'
 import { MainMenu } from './MainMenu'
+
+function LocationDisplay() {
+  const { pathname } = useLocation()
+  return <div data-testid="location">{pathname}</div>
+}
 
 beforeEach(() => localStorage.clear())
 
@@ -44,6 +49,21 @@ describe('MainMenu', () => {
     localStorage.setItem('alefbet-progress', JSON.stringify(['alef', 'bet', 'gimel']))
     renderMainMenu()
     expect(screen.getByText('3 / 22 אותיות')).toBeInTheDocument()
+  })
+
+  it('play button navigates to /play', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <ProgressProvider>
+          <Routes>
+            <Route path="/" element={<MainMenu />} />
+            <Route path="/play" element={<LocationDisplay />} />
+          </Routes>
+        </ProgressProvider>
+      </MemoryRouter>
+    )
+    fireEvent.click(screen.getByLabelText('התחל לשחק'))
+    expect(screen.getByTestId('location')).toHaveTextContent('/play')
   })
 
   it('marks visited letters with data-visited="true" on their dot', () => {
