@@ -12,7 +12,7 @@ export function NavBar({ currentId }) {
       style={{ background: '#FFE0B2' }}
     >
       <button
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/play')}
         className="rounded-xl px-5 py-2.5 text-white font-bold text-xl"
         style={{ background: '#E07B39', minWidth: '52px', minHeight: '52px' }}
         aria-label="חזור לרשימה"
