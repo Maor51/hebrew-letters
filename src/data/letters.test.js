@@ -29,4 +29,22 @@ describe('letters.json', () => {
     expect(letters[0].id).toBe('alef')
     expect(letters[21].id).toBe('tav')
   })
+
+  it('each letter field contains Hebrew Unicode characters', () => {
+    const hebrewRange = /[א-ת]/
+    letters.forEach((l) => {
+      expect(l.letter).toMatch(hebrewRange)
+      expect(l.name).toMatch(hebrewRange)
+      expect(l.word).toMatch(hebrewRange)
+    })
+  })
+
+  it('each word starts with the correct Hebrew letter', () => {
+    // Strip nikud (Hebrew combining characters U+0591-U+05C7) before comparing
+    const stripNikud = (str) => str.replace(/[֑-ׇ]/g, '')
+    letters.forEach((l) => {
+      const firstChar = stripNikud(l.word)[0]
+      expect(firstChar).toBe(l.letter)
+    })
+  })
 })
