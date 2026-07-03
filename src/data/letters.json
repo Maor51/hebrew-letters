@@ -1,0 +1,222 @@
+[
+  {
+    "id": "alef",
+    "letter": "א",
+    "name": "אָלֶף",
+    "word": "אַרְיֵה",
+    "imagePath": "/images/alef.png",
+    "audioLetterPath": "/audio/alef.mp3",
+    "audioWordPath": "/audio/word-alef.mp3",
+    "color": "#FFB347"
+  },
+  {
+    "id": "bet",
+    "letter": "ב",
+    "name": "בֵּית",
+    "word": "בַּיִת",
+    "imagePath": "/images/bet.png",
+    "audioLetterPath": "/audio/bet.mp3",
+    "audioWordPath": "/audio/word-bet.mp3",
+    "color": "#98D8C8"
+  },
+  {
+    "id": "gimel",
+    "letter": "ג",
+    "name": "גִּימֶל",
+    "word": "גָּמָל",
+    "imagePath": "/images/gimel.png",
+    "audioLetterPath": "/audio/gimel.mp3",
+    "audioWordPath": "/audio/word-gimel.mp3",
+    "color": "#B5A7D5"
+  },
+  {
+    "id": "dalet",
+    "letter": "ד",
+    "name": "דָּלֶת",
+    "word": "דָּג",
+    "imagePath": "/images/dalet.png",
+    "audioLetterPath": "/audio/dalet.mp3",
+    "audioWordPath": "/audio/word-dalet.mp3",
+    "color": "#FF8FAB"
+  },
+  {
+    "id": "he",
+    "letter": "ה",
+    "name": "הֵא",
+    "word": "הַר",
+    "imagePath": "/images/he.png",
+    "audioLetterPath": "/audio/he.mp3",
+    "audioWordPath": "/audio/word-he.mp3",
+    "color": "#95E1D3"
+  },
+  {
+    "id": "vav",
+    "letter": "ו",
+    "name": "וָו",
+    "word": "וֶרֶד",
+    "imagePath": "/images/vav.png",
+    "audioLetterPath": "/audio/vav.mp3",
+    "audioWordPath": "/audio/word-vav.mp3",
+    "color": "#FFB347"
+  },
+  {
+    "id": "zayin",
+    "letter": "ז",
+    "name": "זַיִן",
+    "word": "זֶבְרָה",
+    "imagePath": "/images/zayin.png",
+    "audioLetterPath": "/audio/zayin.mp3",
+    "audioWordPath": "/audio/word-zayin.mp3",
+    "color": "#98D8C8"
+  },
+  {
+    "id": "het",
+    "letter": "ח",
+    "name": "חֵית",
+    "word": "חָתוּל",
+    "imagePath": "/images/het.png",
+    "audioLetterPath": "/audio/het.mp3",
+    "audioWordPath": "/audio/word-het.mp3",
+    "color": "#B5A7D5"
+  },
+  {
+    "id": "tet",
+    "letter": "ט",
+    "name": "טֵית",
+    "word": "טִיגְרִיס",
+    "imagePath": "/images/tet.png",
+    "audioLetterPath": "/audio/tet.mp3",
+    "audioWordPath": "/audio/word-tet.mp3",
+    "color": "#FF8FAB"
+  },
+  {
+    "id": "yod",
+    "letter": "י",
+    "name": "יוֹד",
+    "word": "יוֹנָה",
+    "imagePath": "/images/yod.png",
+    "audioLetterPath": "/audio/yod.mp3",
+    "audioWordPath": "/audio/word-yod.mp3",
+    "color": "#95E1D3"
+  },
+  {
+    "id": "kaf",
+    "letter": "כ",
+    "name": "כַּף",
+    "word": "כֶּלֶב",
+    "imagePath": "/images/kaf.png",
+    "audioLetterPath": "/audio/kaf.mp3",
+    "audioWordPath": "/audio/word-kaf.mp3",
+    "color": "#FFB347"
+  },
+  {
+    "id": "lamed",
+    "letter": "ל",
+    "name": "לָמֶד",
+    "word": "לֵב",
+    "imagePath": "/images/lamed.png",
+    "audioLetterPath": "/audio/lamed.mp3",
+    "audioWordPath": "/audio/word-lamed.mp3",
+    "color": "#98D8C8"
+  },
+  {
+    "id": "mem",
+    "letter": "מ",
+    "name": "מֵם",
+    "word": "מָכוֹנִית",
+    "imagePath": "/images/mem.png",
+    "audioLetterPath": "/audio/mem.mp3",
+    "audioWordPath": "/audio/word-mem.mp3",
+    "color": "#B5A7D5"
+  },
+  {
+    "id": "nun",
+    "letter": "נ",
+    "name": "נוּן",
+    "word": "נָחָשׁ",
+    "imagePath": "/images/nun.png",
+    "audioLetterPath": "/audio/nun.mp3",
+    "audioWordPath": "/audio/word-nun.mp3",
+    "color": "#FF8FAB"
+  },
+  {
+    "id": "samekh",
+    "letter": "ס",
+    "name": "סָמֶךְ",
+    "word": "סוּס",
+    "imagePath": "/images/samekh.png",
+    "audioLetterPath": "/audio/samekh.mp3",
+    "audioWordPath": "/audio/word-samekh.mp3",
+    "color": "#95E1D3"
+  },
+  {
+    "id": "ayin",
+    "letter": "ע",
+    "name": "עַיִן",
+    "word": "עֵץ",
+    "imagePath": "/images/ayin.png",
+    "audioLetterPath": "/audio/ayin.mp3",
+    "audioWordPath": "/audio/word-ayin.mp3",
+    "color": "#FFB347"
+  },
+  {
+    "id": "pe",
+    "letter": "פ",
+    "name": "פֵּא",
+    "word": "פִּיל",
+    "imagePath": "/images/pe.png",
+    "audioLetterPath": "/audio/pe.mp3",
+    "audioWordPath": "/audio/word-pe.mp3",
+    "color": "#98D8C8"
+  },
+  {
+    "id": "tsadi",
+    "letter": "צ",
+    "name": "צַדִּי",
+    "word": "צָב",
+    "imagePath": "/images/tsadi.png",
+    "audioLetterPath": "/audio/tsadi.mp3",
+    "audioWordPath": "/audio/word-tsadi.mp3",
+    "color": "#B5A7D5"
+  },
+  {
+    "id": "qof",
+    "letter": "ק",
+    "name": "קוֹף",
+    "word": "קוֹף",
+    "imagePath": "/images/qof.png",
+    "audioLetterPath": "/audio/qof.mp3",
+    "audioWordPath": "/audio/word-qof.mp3",
+    "color": "#FF8FAB"
+  },
+  {
+    "id": "resh",
+    "letter": "ר",
+    "name": "רֵישׁ",
+    "word": "רַכֶּבֶת",
+    "imagePath": "/images/resh.png",
+    "audioLetterPath": "/audio/resh.mp3",
+    "audioWordPath": "/audio/word-resh.mp3",
+    "color": "#95E1D3"
+  },
+  {
+    "id": "shin",
+    "letter": "ש",
+    "name": "שִׁין",
+    "word": "שֶׁמֶשׁ",
+    "imagePath": "/images/shin.png",
+    "audioLetterPath": "/audio/shin.mp3",
+    "audioWordPath": "/audio/word-shin.mp3",
+    "color": "#FFB347"
+  },
+  {
+    "id": "tav",
+    "letter": "ת",
+    "name": "תָּו",
+    "word": "תַּפּוּחַ",
+    "imagePath": "/images/tav.png",
+    "audioLetterPath": "/audio/tav.mp3",
+    "audioWordPath": "/audio/word-tav.mp3",
+    "color": "#98D8C8"
+  }
+]
