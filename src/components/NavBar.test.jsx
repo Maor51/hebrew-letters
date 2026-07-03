@@ -1,6 +1,11 @@
-import { render, screen } from '@testing-library/react'
-import { MemoryRouter, Routes, Route } from 'react-router-dom'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { NavBar } from './NavBar'
+
+function LocationDisplay() {
+  const { pathname } = useLocation()
+  return <div data-testid="location">{pathname}</div>
+}
 
 const renderNavBar = (currentId) =>
   render(
@@ -30,5 +35,18 @@ describe('NavBar', () => {
   it('renders back-to-grid and next-letter buttons', () => {
     renderNavBar('alef')
     expect(screen.getAllByRole('button')).toHaveLength(2)
+  })
+
+  it('home button navigates to /play', () => {
+    render(
+      <MemoryRouter initialEntries={['/letter/alef']}>
+        <Routes>
+          <Route path="/letter/:id" element={<NavBar currentId="alef" />} />
+          <Route path="/play" element={<LocationDisplay />} />
+        </Routes>
+      </MemoryRouter>
+    )
+    fireEvent.click(screen.getByLabelText('חזור לרשימה'))
+    expect(screen.getByTestId('location')).toHaveTextContent('/play')
   })
 })
