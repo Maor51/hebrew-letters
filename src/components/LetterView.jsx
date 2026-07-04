@@ -140,7 +140,7 @@ export function LetterView() {
               onClick={() => playAudio(letter.audioWordPath)}
             >
               {hasVisibleImage ? (
-                <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ display: 'flex', gap: '10px', overflow: 'hidden' }}>
                   {letter.imagePaths.map((src, i) =>
                     imgErrors.has(i) ? null : (
                       <img
@@ -149,10 +149,12 @@ export function LetterView() {
                         alt={letter.word}
                         style={{
                           flex: 1,
+                          minWidth: 0,
                           height: '160px',
                           objectFit: 'contain',
                           borderRadius: '12px',
                           display: 'block',
+                          backgroundColor: 'white',
                         }}
                         onError={() => setImgErrors((prev) => new Set([...prev, i]))}
                       />

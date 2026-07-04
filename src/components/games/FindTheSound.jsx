@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
 import { CARD_COLORS } from '../../constants/cardColors'
 
@@ -79,7 +79,7 @@ export function FindTheSound({ letter, allLetters, onComplete }) {
 
   return (
     <div style={{ padding: '12px 0' }}>
-      {showConfetti && <ReactConfetti recycle={false} numberOfPieces={80} colors={['#fb923c', '#34d399', '#a78bfa', '#f472b6', '#38bdf8']} />}
+      {showConfetti && <ReactConfetti recycle={false} numberOfPieces={160} colors={['#fb923c', '#34d399', '#a78bfa', '#f472b6', '#38bdf8']} />}
       <p style={{ textAlign: 'center', fontWeight: 700, fontSize: '16px', color: '#1e293b', marginBottom: '12px', direction: 'rtl' }}>
         מצא את האות!
       </p>
@@ -92,45 +92,80 @@ export function FindTheSound({ letter, allLetters, onComplete }) {
       </div>
 
       {/* 2x2 card grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '14px' }}>
-        {options.map((opt, i) => {
-          const { from, to } = CARD_COLORS[i % 5]
-          const isWrong = wrongId === opt.id
-          const isCorrect = correctId === opt.id
-          return (
-            <motion.button
-              key={opt.id}
-              data-testid={`card-${opt.id}`}
-              onClick={() => handleTap(opt)}
-              animate={
-                isWrong
-                  ? { x: [-8, 8, -6, 6, 0] }
-                  : isCorrect
-                  ? { scale: [1, 1.2, 1] }
-                  : {}
-              }
-              transition={{ duration: 0.35 }}
+      <div style={{ position: 'relative', marginBottom: '14px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+          {options.map((opt, i) => {
+            const { from, to } = CARD_COLORS[i % 5]
+            const isWrong = wrongId === opt.id
+            const isCorrect = correctId === opt.id
+            return (
+              <motion.button
+                key={opt.id}
+                data-testid={`card-${opt.id}`}
+                onClick={() => handleTap(opt)}
+                animate={
+                  isWrong
+                    ? { x: [-8, 8, -6, 6, 0] }
+                    : isCorrect
+                    ? { scale: [1, 1.2, 1] }
+                    : {}
+                }
+                transition={{ duration: 0.35 }}
+                style={{
+                  background: `linear-gradient(135deg, ${from}, ${to})`,
+                  borderRadius: '20px',
+                  padding: '22px 8px',
+                  minHeight: '120px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.10)',
+                  borderBottomWidth: '4px',
+                  borderBottomStyle: 'solid',
+                  borderBottomColor: 'rgba(0,0,0,0.14)',
+                  cursor: 'pointer',
+                }}
+              >
+                <span style={{ fontSize: '56px', fontWeight: 900, color: 'white', textShadow: '0 2px 6px rgba(0,0,0,0.18)', lineHeight: 1 }}>
+                  {opt.letter}
+                </span>
+              </motion.button>
+            )
+          })}
+        </div>
+
+        {/* Success overlay */}
+        <AnimatePresence>
+          {correctId && (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.1 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 18 }}
               style={{
-                background: `linear-gradient(135deg, ${from}, ${to})`,
+                position: 'absolute', inset: 0,
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(52,211,153,0.22)',
                 borderRadius: '20px',
-                padding: '22px 8px',
-                minHeight: '120px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.10)',
-                borderBottomWidth: '4px',
-                borderBottomStyle: 'solid',
-                borderBottomColor: 'rgba(0,0,0,0.14)',
-                cursor: 'pointer',
+                pointerEvents: 'none', zIndex: 5,
               }}
             >
-              <span style={{ fontSize: '56px', fontWeight: 900, color: 'white', textShadow: '0 2px 6px rgba(0,0,0,0.18)', lineHeight: 1 }}>
-                {opt.letter}
-              </span>
-            </motion.button>
-          )
-        })}
+              <motion.span
+                animate={{ scale: [0.4, 1.3, 1], rotate: [0, -12, 12, 0] }}
+                transition={{ duration: 0.5 }}
+                style={{ fontSize: '68px', lineHeight: 1 }}
+              >⭐</motion.span>
+              <motion.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.18 }}
+                style={{ color: '#059669', fontWeight: 900, fontSize: '20px', margin: '8px 0 0', direction: 'rtl' }}
+              >כל הכבוד!</motion.p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Replay */}

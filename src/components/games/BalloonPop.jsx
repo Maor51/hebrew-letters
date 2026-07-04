@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
 import { CARD_COLORS } from '../../constants/cardColors'
 
@@ -87,7 +87,7 @@ export function BalloonPop({ letter, allLetters, onComplete }) {
 
   return (
     <div style={{ padding: '12px 0' }}>
-      {showConfetti && <ReactConfetti recycle={false} numberOfPieces={80} colors={['#fb923c', '#34d399', '#a78bfa', '#f472b6', '#38bdf8']} />}
+      {showConfetti && <ReactConfetti recycle={false} numberOfPieces={160} colors={['#fb923c', '#34d399', '#a78bfa', '#f472b6', '#38bdf8']} />}
 
       <p style={{ textAlign: 'center', fontWeight: 700, fontSize: '16px', color: '#1e293b', marginBottom: '12px', direction: 'rtl' }}>
         פוצץ את הבלון הנכון!
@@ -149,6 +149,37 @@ export function BalloonPop({ letter, allLetters, onComplete }) {
             </motion.div>
           )
         })}
+
+        {/* Success overlay */}
+        <AnimatePresence>
+          {poppedId && (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 18 }}
+              style={{
+                position: 'absolute', inset: 0,
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                pointerEvents: 'none', zIndex: 5,
+              }}
+            >
+              <motion.span
+                animate={{ scale: [0.3, 1.4, 1.1, 1], rotate: [0, -15, 15, 0] }}
+                transition={{ duration: 0.6 }}
+                style={{ fontSize: '80px', lineHeight: 1 }}
+              >🎉</motion.span>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                style={{ color: '#059669', fontWeight: 900, fontSize: '22px', margin: '10px 0 0', direction: 'rtl', textShadow: '0 1px 4px rgba(255,255,255,0.9)' }}
+              >כל הכבוד!</motion.p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div style={{ textAlign: 'center' }}>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
 
 const GRID_CONFIGS = {
@@ -106,7 +106,7 @@ export function LetterPuzzle({ letter, onComplete }) {
 
   return (
     <div style={{ padding: '12px 0' }} dir="rtl">
-      {showConfetti && <ReactConfetti recycle={false} numberOfPieces={100} colors={['#fb923c', '#34d399', '#a78bfa', '#f472b6', '#38bdf8']} />}
+      {showConfetti && <ReactConfetti recycle={false} numberOfPieces={200} colors={['#fb923c', '#34d399', '#a78bfa', '#f472b6', '#38bdf8']} />}
 
       <p style={{ textAlign: 'center', fontWeight: 700, fontSize: '16px', color: '#1e293b', marginBottom: '12px' }}>
         השלם את הפאזל!
@@ -134,46 +134,80 @@ export function LetterPuzzle({ letter, onComplete }) {
       </div>
 
       {/* Target grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${cols}, ${pieceSize}px)`,
-          gap: '2px',
-          margin: '0 auto 16px',
-          width: 'fit-content',
-        }}
-      >
-        {Array.from({ length: cols * rows }).map((_, idx) => {
-          const col = idx % cols
-          const row = Math.floor(idx / cols)
-          const slotId = `${col}-${row}`
-          const isFilled = solvedIds.has(slotId)
-          return (
-            <div
-              key={slotId}
-              data-testid={`slot-${slotId}`}
-              ref={(el) => { slotRefs.current[slotId] = el }}
+      <div style={{ position: 'relative', margin: '0 auto 16px', width: 'fit-content' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${cols}, ${pieceSize}px)`,
+            gap: '2px',
+          }}
+        >
+          {Array.from({ length: cols * rows }).map((_, idx) => {
+            const col = idx % cols
+            const row = Math.floor(idx / cols)
+            const slotId = `${col}-${row}`
+            const isFilled = solvedIds.has(slotId)
+            return (
+              <div
+                key={slotId}
+                data-testid={`slot-${slotId}`}
+                ref={(el) => { slotRefs.current[slotId] = el }}
+                style={{
+                  width: pieceSize,
+                  height: pieceSize,
+                  border: isFilled ? 'none' : '2px dashed #cbd5e1',
+                  borderRadius: '4px',
+                  overflow: 'hidden',
+                  backgroundColor: 'white',
+                }}
+              >
+                {isFilled && imagePath && (
+                  <div style={{
+                    width: '100%', height: '100%',
+                    backgroundImage: `url(${imagePath})`,
+                    backgroundSize: `${cols * 100}% ${rows * 100}%`,
+                    backgroundPosition: `${cols > 1 ? (col / (cols - 1)) * 100 : 0}% ${rows > 1 ? (row / (rows - 1)) * 100 : 0}%`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundColor: 'white',
+                  }} />
+                )}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Success overlay */}
+        <AnimatePresence>
+          {showConfetti && (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 18 }}
               style={{
-                width: pieceSize,
-                height: pieceSize,
-                border: isFilled ? 'none' : '2px dashed #cbd5e1',
-                borderRadius: '4px',
-                overflow: 'hidden',
-                background: isFilled ? 'transparent' : 'rgba(255,255,255,0.5)',
+                position: 'absolute', inset: 0,
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(52,211,153,0.22)',
+                borderRadius: '8px',
+                pointerEvents: 'none', zIndex: 5,
               }}
             >
-              {isFilled && imagePath && (
-                <div style={{
-                  width: '100%', height: '100%',
-                  backgroundImage: `url(${imagePath})`,
-                  backgroundSize: `${cols * 100}% ${rows * 100}%`,
-                  backgroundPosition: `${cols > 1 ? (col / (cols - 1)) * 100 : 0}% ${rows > 1 ? (row / (rows - 1)) * 100 : 0}%`,
-                  backgroundRepeat: 'no-repeat',
-                }} />
-              )}
-            </div>
-          )
-        })}
+              <motion.span
+                animate={{ scale: [0.4, 1.3, 1], rotate: [0, -10, 10, 0] }}
+                transition={{ duration: 0.5 }}
+                style={{ fontSize: '64px', lineHeight: 1 }}
+              >⭐</motion.span>
+              <motion.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.18 }}
+                style={{ color: '#059669', fontWeight: 900, fontSize: '20px', margin: '8px 0 0' }}
+              >כל הכבוד!</motion.p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Piece tray */}
@@ -198,7 +232,7 @@ export function LetterPuzzle({ letter, onComplete }) {
               backgroundSize: `${cols * 100}% ${rows * 100}%`,
               backgroundPosition: `${cols > 1 ? (piece.col / (cols - 1)) * 100 : 0}% ${rows > 1 ? (piece.row / (rows - 1)) * 100 : 0}%`,
               backgroundRepeat: 'no-repeat',
-              backgroundColor: imagePath ? 'transparent' : '#e2e8f0',
+              backgroundColor: imagePath ? 'white' : '#e2e8f0',
             }}
           />
         ))}
