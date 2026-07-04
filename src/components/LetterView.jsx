@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
 import letters from '../data/letters.json'
 import { useProgress } from '../contexts/ProgressContext'
 import { NavBar } from './NavBar'
-
-const GRADIENT_END = {
-  '#FFB347': '#FF8C69',
-  '#98D8C8': '#7EC8B8',
-  '#B5A7D5': '#9E8FC5',
-  '#FF8FAB': '#FF6B9D',
-  '#95E1D3': '#78CFBE',
-}
+import { CARD_COLORS } from '../constants/cardColors'
 
 function playAudio(path) {
   const audio = new Audio(path)
@@ -20,7 +14,9 @@ function playAudio(path) {
 
 export function LetterView() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const letter = letters.find((l) => l.id === id)
+  const letterIndex = letters.findIndex((l) => l.id === id)
   const { isVisited, markVisited } = useProgress()
   const [showConfetti, setShowConfetti] = useState(false)
   const [imgErrors, setImgErrors] = useState(new Set())
@@ -38,90 +34,131 @@ export function LetterView() {
 
   if (!letter) return null
 
-  const gradient = `linear-gradient(160deg, ${letter.color}, ${GRADIENT_END[letter.color]})`
+  const letterColor = CARD_COLORS[letterIndex % 5].from
   const hasVisibleImage = letter.imagePaths.some((_, i) => !imgErrors.has(i))
 
   return (
-    <div className="min-h-screen" style={{ background: '#FFF5E6' }}>
+    <div
+      className="min-h-screen flex flex-col"
+      style={{ background: 'linear-gradient(160deg, #e0f2fe 0%, #f0fdf4 50%, #fef9c3 100%)' }}
+    >
       {showConfetti && (
         <ReactConfetti
           recycle={false}
           numberOfPieces={300}
-          colors={['#FFB347', '#FF8C69', '#98D8C8', '#B5A7D5', '#FF8FAB', '#FFD700']}
+          colors={['#fb923c', '#34d399', '#a78bfa', '#f472b6', '#38bdf8', '#FFD700']}
         />
       )}
 
-      <NavBar currentId={id} />
-
-      {/* Letter banner — tap to hear letter name */}
-      <div
-        className="relative flex items-center justify-center cursor-pointer select-none"
-        style={{ background: gradient, paddingTop: '24px', paddingBottom: '24px' }}
-        onClick={() => playAudio(letter.audioLetterPath)}
-      >
-        <span
-          className="text-white font-serif leading-none"
-          style={{ fontSize: '180px', textShadow: '4px 6px 12px rgba(0,0,0,0.2)' }}
+      {/* Back pill */}
+      <div className="px-4 pt-5">
+        <button
+          onClick={() => navigate('/play')}
+          style={{
+            background: 'white',
+            borderRadius: '50px',
+            padding: '9px 20px',
+            fontWeight: 700,
+            fontSize: '13px',
+            color: '#475569',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.10), 0 2px 0 rgba(0,0,0,0.07)',
+            borderBottom: '3px solid rgba(0,0,0,0.08)',
+          }}
         >
-          {letter.letter}
-        </span>
-        <span
-          className="absolute bottom-3 right-4 text-2xl opacity-60"
-          aria-hidden="true"
-        >
-          🔊
-        </span>
+          🏠 חזור
+        </button>
       </div>
 
-      {/* Word */}
-      <div className="text-center mt-5 mb-4 px-4" dir="rtl">
-        <p
-          className="font-black leading-tight"
-          style={{ fontSize: '40px', color: '#3D2B1F' }}
-        >
-          {letter.word}
-        </p>
-      </div>
-
-      {/* Image row — tap to hear word */}
-      <div
-        className="mx-4 mb-6 cursor-pointer select-none"
-        onClick={() => playAudio(letter.audioWordPath)}
-      >
-        {hasVisibleImage ? (
-          <div style={{ display: 'flex', gap: '10px' }}>
-            {letter.imagePaths.map((src, i) =>
-              imgErrors.has(i) ? null : (
-                <img
-                  key={src}
-                  src={src}
-                  alt={letter.word}
-                  style={{
-                    flex: 1,
-                    height: '160px',
-                    objectFit: 'contain',
-                    borderRadius: '12px',
-                    display: 'block',
-                  }}
-                  onError={() => setImgErrors((prev) => new Set([...prev, i]))}
-                />
-              )
-            )}
-          </div>
-        ) : (
-          <div
-            className="w-full flex flex-col items-center justify-center gap-2"
+      {/* Glassmorphism card */}
+      <div className="flex-1 px-4 pt-4 pb-2">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={id}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -24 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
             style={{
-              height: '160px',
-              background: 'linear-gradient(135deg, #FFE0B2, #FFCC80)',
-              border: '2px dashed #FFB347',
-              borderRadius: '12px',
+              background: 'rgba(255,255,255,0.82)',
+              backdropFilter: 'blur(16px)',
+              borderRadius: '28px',
+              border: '1.5px solid rgba(255,255,255,0.75)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05)',
+              padding: '28px 20px 22px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '14px',
             }}
+            dir="rtl"
           >
-            <span style={{ fontSize: '40px', opacity: 0.5 }}>🖼️</span>
-          </div>
-        )}
+            {/* Big letter — tap to hear */}
+            <span
+              className="cursor-pointer select-none leading-none"
+              style={{
+                fontSize: '130px',
+                fontWeight: 900,
+                color: letterColor,
+                textShadow: `0 6px 20px ${letterColor}40`,
+              }}
+              onClick={() => playAudio(letter.audioLetterPath)}
+            >
+              {letter.letter}
+            </span>
+
+            <span style={{ fontSize: '11px', fontWeight: 600, color: '#94a3b8' }}>
+              🔊 הקש לשמוע
+            </span>
+
+            <p style={{ fontSize: '34px', fontWeight: 900, color: '#1e293b', margin: 0 }}>
+              {letter.word}
+            </p>
+
+            {/* Image row — tap to hear word */}
+            <div
+              className="w-full cursor-pointer select-none"
+              onClick={() => playAudio(letter.audioWordPath)}
+            >
+              {hasVisibleImage ? (
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  {letter.imagePaths.map((src, i) =>
+                    imgErrors.has(i) ? null : (
+                      <img
+                        key={src}
+                        src={src}
+                        alt={letter.word}
+                        style={{
+                          flex: 1,
+                          height: '160px',
+                          objectFit: 'contain',
+                          borderRadius: '12px',
+                          display: 'block',
+                        }}
+                        onError={() => setImgErrors((prev) => new Set([...prev, i]))}
+                      />
+                    )
+                  )}
+                </div>
+              ) : (
+                <div
+                  className="w-full flex flex-col items-center justify-center gap-2"
+                  style={{
+                    height: '160px',
+                    background: 'linear-gradient(135deg, #FFE0B2, #FFCC80)',
+                    border: '2px dashed #FFB347',
+                    borderRadius: '12px',
+                  }}
+                >
+                  <span style={{ fontSize: '40px', opacity: 0.5 }}>🖼️</span>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
+
+      {/* Nav row */}
+      <NavBar currentId={id} />
     </div>
   )
 }
