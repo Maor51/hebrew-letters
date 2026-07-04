@@ -194,11 +194,11 @@ export function LetterPuzzle({ letter, onComplete }) {
               cursor: 'grab',
               boxShadow: '0 3px 10px rgba(0,0,0,0.15)',
               flexShrink: 0,
-              backgroundImage: imagePath ? `url(${imagePath})` : undefined,
+              backgroundImage: imagePath ? `url(${imagePath})` : 'none',
               backgroundSize: `${cols * 100}% ${rows * 100}%`,
               backgroundPosition: `${cols > 1 ? (piece.col / (cols - 1)) * 100 : 0}% ${rows > 1 ? (piece.row / (rows - 1)) * 100 : 0}%`,
               backgroundRepeat: 'no-repeat',
-              background: imagePath ? undefined : '#e2e8f0',
+              backgroundColor: imagePath ? 'transparent' : '#e2e8f0',
             }}
           />
         ))}

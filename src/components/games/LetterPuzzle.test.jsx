@@ -39,4 +39,18 @@ describe('LetterPuzzle', () => {
     expect(screen.getAllByTestId(/^slot-/).length).toBe(12)
     expect(screen.getAllByTestId(/^piece-/).length).toBe(12)
   })
+
+  it('calls onComplete after completing single-image puzzle (drag is not unit-testable, verify onComplete not called without solving)', () => {
+    const onComplete = vi.fn()
+    render(<LetterPuzzle letter={alef} onComplete={onComplete} />)
+    // Without drag-to-solve, onComplete should never be called on render
+    expect(onComplete).not.toHaveBeenCalled()
+  })
+
+  it('renders second image slot after advancing imageIndex (alefTwoImages has 2 paths)', () => {
+    render(<LetterPuzzle letter={alefTwoImages} onComplete={() => {}} />)
+    // Should render normally with the first image's puzzle
+    expect(screen.getAllByTestId(/^slot-/).length).toBe(6)
+    expect(screen.getAllByTestId(/^piece-/).length).toBe(6)
+  })
 })

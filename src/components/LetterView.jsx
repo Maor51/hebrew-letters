@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
@@ -21,6 +21,7 @@ export function LetterView() {
   const letterIndex = letters.findIndex((l) => l.id === id)
   const letter = letters[letterIndex]
   const { isVisited, markVisited } = useProgress()
+  const confettiTimerRef = useRef(null)
   const [showConfetti, setShowConfetti] = useState(false)
   const [imgErrors, setImgErrors] = useState(new Set())
   const [gameDone, setGameDone] = useState({
@@ -31,6 +32,7 @@ export function LetterView() {
 
   // Reset game completion when letter changes
   useEffect(() => {
+    if (confettiTimerRef.current) clearTimeout(confettiTimerRef.current)
     setGameDone({ findTheSound: false, balloonPop: false, letterPuzzle: false })
     setImgErrors(new Set())
   }, [id])
@@ -46,7 +48,7 @@ export function LetterView() {
     if (gameDone.findTheSound && gameDone.balloonPop && gameDone.letterPuzzle) {
       if (!isVisited(id)) {
         setShowConfetti(true)
-        setTimeout(() => setShowConfetti(false), 2500)
+        confettiTimerRef.current = setTimeout(() => setShowConfetti(false), 2500)
       }
       markVisited(id)
     }
