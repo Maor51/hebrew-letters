@@ -65,18 +65,20 @@ export function BalloonPop({ letter, allLetters, onComplete }) {
       setPoppedId(balloon.id)
       setShowConfetti(true)
       timersRef.current.push(setTimeout(() => setShowConfetti(false), 1500))
-      const next = correctRounds + 1
-      if (next >= TOTAL_ROUNDS) {
-        doneRef.current = true
-        timersRef.current.push(setTimeout(() => onComplete(), 1200))
-      } else {
-        timersRef.current.push(setTimeout(() => {
-          setCorrectRounds(next)
-          setBalloons(buildBalloons(letter, allLetters))
-          setPoppedId(null)
-          setWrongId(null)
-        }, 1000))
-      }
+      setCorrectRounds((prev) => {
+        const next = prev + 1
+        if (next >= TOTAL_ROUNDS) {
+          doneRef.current = true
+          timersRef.current.push(setTimeout(() => onComplete(), 1200))
+        } else {
+          timersRef.current.push(setTimeout(() => {
+            setBalloons(buildBalloons(letter, allLetters))
+            setPoppedId(null)
+            setWrongId(null)
+          }, 1000))
+        }
+        return next
+      })
     } else {
       setWrongId(balloon.id)
       timersRef.current.push(setTimeout(() => setWrongId(null), 400))
