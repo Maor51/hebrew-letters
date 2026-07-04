@@ -15,8 +15,8 @@ function playAudio(path) {
 export function LetterView() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const letter = letters.find((l) => l.id === id)
   const letterIndex = letters.findIndex((l) => l.id === id)
+  const letter = letters[letterIndex]
   const { isVisited, markVisited } = useProgress()
   const [showConfetti, setShowConfetti] = useState(false)
   const [imgErrors, setImgErrors] = useState(new Set())
@@ -54,6 +54,7 @@ export function LetterView() {
       <div className="px-4 pt-5">
         <button
           onClick={() => navigate('/play')}
+          aria-label="חזור לרשימה"
           style={{
             background: 'white',
             borderRadius: '50px',
