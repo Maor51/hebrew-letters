@@ -1,43 +1,49 @@
-const GRADIENT_END = {
-  '#FFB347': '#FF8C69',
-  '#98D8C8': '#7EC8B8',
-  '#B5A7D5': '#9E8FC5',
-  '#FF8FAB': '#FF6B9D',
-  '#95E1D3': '#78CFBE',
-}
+import { motion } from 'framer-motion'
+import { CARD_COLORS } from '../constants/cardColors'
 
-export function LetterCard({ letter, isVisited, onClick }) {
-  const gradient = `linear-gradient(135deg, ${letter.color}, ${GRADIENT_END[letter.color]})`
+export function LetterCard({ letter, index = 0, isVisited, onClick }) {
+  const { from, to } = CARD_COLORS[index % 5]
 
   return (
-    <button
+    <motion.button
       onClick={onClick}
-      className="relative rounded-[18px] flex flex-col items-center justify-center gap-1"
+      whileTap={{ y: 3, boxShadow: '0 1px 4px rgba(0,0,0,0.08)', borderBottomWidth: '1px' }}
+      whileHover={{ y: -2, boxShadow: '0 8px 20px rgba(0,0,0,0.14)' }}
+      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+      className="relative flex flex-col items-center justify-center gap-[3px] w-full"
       style={{
-        background: gradient,
-        border: isVisited ? '3px solid #FFD700' : '3px solid transparent',
-        boxShadow: isVisited
-          ? '0 4px 14px rgba(255,215,0,0.3)'
-          : '0 2px 8px rgba(0,0,0,0.1)',
-        minHeight: '110px',
-        padding: '16px 6px 12px',
+        background: `linear-gradient(135deg, ${from}, ${to})`,
+        borderRadius: '20px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.10)',
+        borderBottom: '4px solid rgba(0,0,0,0.14)',
+        padding: '10px 4px 8px',
+        minHeight: '84px',
       }}
     >
       {isVisited && (
-        <span className="absolute top-1.5 right-2 text-lg leading-none">⭐</span>
+        <span
+          className="absolute"
+          style={{
+            top: '5px',
+            right: '6px',
+            fontSize: '13px',
+            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))',
+          }}
+        >
+          ⭐
+        </span>
       )}
       <span
-        className="text-white font-serif leading-none"
-        style={{ fontSize: '72px', textShadow: '2px 3px 6px rgba(0,0,0,0.2)' }}
+        className="text-white leading-none"
+        style={{ fontSize: '44px', fontWeight: 900, textShadow: '0 2px 6px rgba(0,0,0,0.18)' }}
       >
         {letter.letter}
       </span>
       <span
-        className="text-white font-bold"
-        style={{ fontSize: '16px', textShadow: '1px 1px 3px rgba(0,0,0,0.15)' }}
+        style={{ fontSize: '10px', fontWeight: 700, color: 'rgba(255,255,255,0.88)' }}
       >
         {letter.word}
       </span>
-    </button>
+    </motion.button>
   )
 }
