@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        hebrew: ['"Frank Ruhl Libre"', '"David Libre"', 'serif'],
+        sans: ['Rubik', 'sans-serif'],
+        hebrew: ['Rubik', 'sans-serif'],
       },
     },
   },
