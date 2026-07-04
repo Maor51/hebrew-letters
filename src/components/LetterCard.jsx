@@ -15,7 +15,9 @@ export function LetterCard({ letter, index = 0, isVisited, onClick }) {
         background: `linear-gradient(135deg, ${from}, ${to})`,
         borderRadius: '20px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.10)',
-        borderBottom: '4px solid rgba(0,0,0,0.14)',
+        borderBottomWidth: '4px',
+        borderBottomStyle: 'solid',
+        borderBottomColor: 'rgba(0,0,0,0.14)',
         padding: '10px 4px 8px',
         minHeight: '84px',
       }}

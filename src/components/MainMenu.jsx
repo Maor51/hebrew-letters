@@ -40,7 +40,9 @@ export function MainMenu() {
             borderRadius: '50px',
             padding: '16px 52px',
             boxShadow: '0 6px 20px rgba(249,115,22,0.4)',
-            borderBottom: '4px solid rgba(0,0,0,0.12)',
+            borderBottomWidth: '4px',
+            borderBottomStyle: 'solid',
+            borderBottomColor: 'rgba(0,0,0,0.12)',
             minHeight: '64px',
           }}
         >
