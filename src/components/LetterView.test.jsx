@@ -1,9 +1,24 @@
-import { render, screen, act } from '@testing-library/react'
+import { render, screen, act, fireEvent } from '@testing-library/react'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { ProgressProvider } from '../contexts/ProgressContext'
 import { LetterView } from './LetterView'
 
 vi.mock('react-confetti', () => ({ default: () => null }))
+vi.mock('./games/FindTheSound', () => ({
+  FindTheSound: ({ onComplete }) => (
+    <button onClick={onComplete} data-testid="find-complete">FindTheSound</button>
+  ),
+}))
+vi.mock('./games/BalloonPop', () => ({
+  BalloonPop: ({ onComplete }) => (
+    <button onClick={onComplete} data-testid="balloon-complete">BalloonPop</button>
+  ),
+}))
+vi.mock('./games/LetterPuzzle', () => ({
+  LetterPuzzle: ({ onComplete }) => (
+    <button onClick={onComplete} data-testid="puzzle-complete">LetterPuzzle</button>
+  ),
+}))
 
 beforeEach(() => localStorage.clear())
 
@@ -34,10 +49,24 @@ describe('LetterView', () => {
     expect(screen.getByText('1 מתוך 22')).toBeInTheDocument()
   })
 
-  it('marks the letter as visited on mount', () => {
+  it('does NOT mark letter as visited on mount', () => {
     renderLetterView('alef')
     const stored = JSON.parse(localStorage.getItem('alefbet-progress') || '[]')
-    expect(stored).toContain('alef')
+    expect(stored).not.toContain('alef')
+  })
+
+  it('marks letter as visited only after all three games complete', async () => {
+    renderLetterView('alef')
+    expect(JSON.parse(localStorage.getItem('alefbet-progress') || '[]')).not.toContain('alef')
+
+    await act(async () => { fireEvent.click(screen.getByTestId('find-complete')) })
+    expect(JSON.parse(localStorage.getItem('alefbet-progress') || '[]')).not.toContain('alef')
+
+    await act(async () => { fireEvent.click(screen.getByTestId('balloon-complete')) })
+    expect(JSON.parse(localStorage.getItem('alefbet-progress') || '[]')).not.toContain('alef')
+
+    await act(async () => { fireEvent.click(screen.getByTestId('puzzle-complete')) })
+    expect(JSON.parse(localStorage.getItem('alefbet-progress') || '[]')).toContain('alef')
   })
 
   it('renders an image for each path in imagePaths', () => {
@@ -56,7 +85,4 @@ describe('LetterView', () => {
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
     expect(screen.getByText('🖼️')).toBeInTheDocument()
   })
-
-  // Note: partial image failure with multiple images (imagePaths.length > 1) is
-  // tested when multi-image letter entries are added to letters.json.
 })

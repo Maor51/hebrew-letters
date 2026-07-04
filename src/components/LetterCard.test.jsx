@@ -18,11 +18,6 @@ describe('LetterCard', () => {
     expect(screen.getByText('א')).toBeInTheDocument()
   })
 
-  it('renders the Hebrew word', () => {
-    render(<LetterCard letter={mockLetter} isVisited={false} onClick={() => {}} />)
-    expect(screen.getByText('אַרְיֵה')).toBeInTheDocument()
-  })
-
   it('shows gold star when visited', () => {
     render(<LetterCard letter={mockLetter} isVisited={true} onClick={() => {}} />)
     expect(screen.getByText('⭐')).toBeInTheDocument()

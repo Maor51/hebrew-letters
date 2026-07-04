@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
@@ -6,6 +6,9 @@ import letters from '../data/letters.json'
 import { useProgress } from '../contexts/ProgressContext'
 import { NavBar } from './NavBar'
 import { CARD_COLORS } from '../constants/cardColors'
+import { FindTheSound } from './games/FindTheSound'
+import { BalloonPop } from './games/BalloonPop'
+import { LetterPuzzle } from './games/LetterPuzzle'
 
 function playAudio(path) {
   const audio = new Audio(path)
@@ -20,17 +23,31 @@ export function LetterView() {
   const { isVisited, markVisited } = useProgress()
   const [showConfetti, setShowConfetti] = useState(false)
   const [imgErrors, setImgErrors] = useState(new Set())
+  const [gameDone, setGameDone] = useState({
+    findTheSound: false,
+    balloonPop: false,
+    letterPuzzle: false,
+  })
 
+  // Reset game completion when letter changes
   useEffect(() => {
-    let timer
-    if (!isVisited(id)) {
-      setShowConfetti(true)
-      timer = setTimeout(() => setShowConfetti(false), 2500)
-    }
-    markVisited(id)
+    setGameDone({ findTheSound: false, balloonPop: false, letterPuzzle: false })
     setImgErrors(new Set())
-    return () => clearTimeout(timer)
   }, [id])
+
+  const handleGameComplete = (key) => {
+    setGameDone((prev) => {
+      const next = { ...prev, [key]: true }
+      if (next.findTheSound && next.balloonPop && next.letterPuzzle) {
+        if (!isVisited(id)) {
+          setShowConfetti(true)
+          setTimeout(() => setShowConfetti(false), 2500)
+        }
+        markVisited(id)
+      }
+      return next
+    })
+  }
 
   if (!letter) return null
 
@@ -39,8 +56,7 @@ export function LetterView() {
 
   return (
     <div
-      className="min-h-screen flex flex-col"
-      style={{ background: 'linear-gradient(160deg, #e0f2fe 0%, #f0fdf4 50%, #fef9c3 100%)' }}
+      style={{ background: 'linear-gradient(160deg, #e0f2fe 0%, #f0fdf4 50%, #fef9c3 100%)', minHeight: '100vh' }}
     >
       {showConfetti && (
         <ReactConfetti
@@ -71,7 +87,7 @@ export function LetterView() {
       </div>
 
       {/* Glassmorphism card */}
-      <div className="flex-1 px-4 pt-4 pb-2">
+      <div className="px-4 pt-4 pb-2">
         <AnimatePresence mode="wait">
           <motion.div
             key={id}
@@ -93,7 +109,6 @@ export function LetterView() {
             }}
             dir="rtl"
           >
-            {/* Big letter — tap to hear */}
             <span
               className="cursor-pointer select-none leading-none"
               style={{
@@ -115,7 +130,6 @@ export function LetterView() {
               {letter.word}
             </p>
 
-            {/* Image row — tap to hear word */}
             <div
               className="w-full cursor-pointer select-none"
               onClick={() => playAudio(letter.audioWordPath)}
@@ -160,6 +174,27 @@ export function LetterView() {
 
       {/* Nav row */}
       <NavBar currentId={id} />
+
+      {/* Games */}
+      <div className="px-4 pb-10" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
+        <FindTheSound
+          letter={letter}
+          allLetters={letters}
+          onComplete={() => handleGameComplete('findTheSound')}
+        />
+        <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
+        <BalloonPop
+          letter={letter}
+          allLetters={letters}
+          onComplete={() => handleGameComplete('balloonPop')}
+        />
+        <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
+        <LetterPuzzle
+          letter={letter}
+          onComplete={() => handleGameComplete('letterPuzzle')}
+        />
+      </div>
     </div>
   )
 }
