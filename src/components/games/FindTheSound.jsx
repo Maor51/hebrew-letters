@@ -113,8 +113,8 @@ export function FindTheSound({ letter, allLetters, onComplete }) {
               style={{
                 background: `linear-gradient(135deg, ${from}, ${to})`,
                 borderRadius: '20px',
-                padding: '14px 8px',
-                minHeight: '80px',
+                padding: '22px 8px',
+                minHeight: '120px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -125,7 +125,7 @@ export function FindTheSound({ letter, allLetters, onComplete }) {
                 cursor: 'pointer',
               }}
             >
-              <span style={{ fontSize: '44px', fontWeight: 900, color: 'white', textShadow: '0 2px 6px rgba(0,0,0,0.18)', lineHeight: 1 }}>
+              <span style={{ fontSize: '56px', fontWeight: 900, color: 'white', textShadow: '0 2px 6px rgba(0,0,0,0.18)', lineHeight: 1 }}>
                 {opt.letter}
               </span>
             </motion.button>

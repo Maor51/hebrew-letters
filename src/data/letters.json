@@ -4,7 +4,7 @@
     "letter": "א",
     "name": "אָלֶף",
     "word": "אַרְיֵה",
-    "imagePaths": ["/images/alef.png"],
+    "imagePaths": ["/images/alef1.png", "/images/alef2.png"],
     "audioLetterPath": "/audio/alef.mp3",
     "audioWordPath": "/audio/word-alef.mp3",
     "color": "#FFB347"
@@ -14,7 +14,7 @@
     "letter": "ב",
     "name": "בֵּית",
     "word": "בַּיִת",
-    "imagePaths": ["/images/bet.png"],
+    "imagePaths": ["/images/bet1.png", "/images/bet2.png"],
     "audioLetterPath": "/audio/bet.mp3",
     "audioWordPath": "/audio/word-bet.mp3",
     "color": "#98D8C8"
@@ -24,7 +24,7 @@
     "letter": "ג",
     "name": "גִּימֶל",
     "word": "גָּמָל",
-    "imagePaths": ["/images/gimel.png"],
+    "imagePaths": ["/images/gimel1.png", "/images/gimel2.png"],
     "audioLetterPath": "/audio/gimel.mp3",
     "audioWordPath": "/audio/word-gimel.mp3",
     "color": "#B5A7D5"
@@ -34,7 +34,7 @@
     "letter": "ד",
     "name": "דָּלֶת",
     "word": "דָּג",
-    "imagePaths": ["/images/dalet.png"],
+    "imagePaths": ["/images/dalet1.png", "/images/dalet2.png"],
     "audioLetterPath": "/audio/dalet.mp3",
     "audioWordPath": "/audio/word-dalet.mp3",
     "color": "#FF8FAB"
@@ -44,7 +44,7 @@
     "letter": "ה",
     "name": "הֵא",
     "word": "הַר",
-    "imagePaths": ["/images/he.png"],
+    "imagePaths": ["/images/he1.png", "/images/he2.png", "/images/he3.png"],
     "audioLetterPath": "/audio/he.mp3",
     "audioWordPath": "/audio/word-he.mp3",
     "color": "#95E1D3"
@@ -54,7 +54,7 @@
     "letter": "ו",
     "name": "וָו",
     "word": "וֶרֶד",
-    "imagePaths": ["/images/vav.png"],
+    "imagePaths": ["/images/vav1.png", "/images/vav2.png"],
     "audioLetterPath": "/audio/vav.mp3",
     "audioWordPath": "/audio/word-vav.mp3",
     "color": "#FFB347"
@@ -64,7 +64,7 @@
     "letter": "ז",
     "name": "זַיִן",
     "word": "זֶבְרָה",
-    "imagePaths": ["/images/zayin.png"],
+    "imagePaths": ["/images/zayin1.png", "/images/zayin2.png"],
     "audioLetterPath": "/audio/zayin.mp3",
     "audioWordPath": "/audio/word-zayin.mp3",
     "color": "#98D8C8"
@@ -74,7 +74,7 @@
     "letter": "ח",
     "name": "חֵית",
     "word": "חָתוּל",
-    "imagePaths": ["/images/het.png"],
+    "imagePaths": ["/images/het1.png", "/images/het2.png", "/images/het3.png"],
     "audioLetterPath": "/audio/het.mp3",
     "audioWordPath": "/audio/word-het.mp3",
     "color": "#B5A7D5"
@@ -84,7 +84,7 @@
     "letter": "ט",
     "name": "טֵית",
     "word": "טַוָּס",
-    "imagePaths": ["/images/tet.png"],
+    "imagePaths": ["/images/tet1.png", "/images/tet2.png"],
     "audioLetterPath": "/audio/tet.mp3",
     "audioWordPath": "/audio/word-tet.mp3",
     "color": "#FF8FAB"
@@ -94,7 +94,7 @@
     "letter": "י",
     "name": "יוֹד",
     "word": "יוֹנָה",
-    "imagePaths": ["/images/yod.png"],
+    "imagePaths": ["/images/yod1.png", "/images/yod2.png", "/images/yod3.png"],
     "audioLetterPath": "/audio/yod.mp3",
     "audioWordPath": "/audio/word-yod.mp3",
     "color": "#95E1D3"
@@ -104,7 +104,7 @@
     "letter": "כ",
     "name": "כַּף",
     "word": "כֶּלֶב",
-    "imagePaths": ["/images/kaf.png"],
+    "imagePaths": ["/images/kaf1.png", "/images/kaf2.png", "/images/kaf3.png"],
     "audioLetterPath": "/audio/kaf.mp3",
     "audioWordPath": "/audio/word-kaf.mp3",
     "color": "#FFB347"
@@ -114,7 +114,7 @@
     "letter": "ל",
     "name": "לָמֶד",
     "word": "לֵב",
-    "imagePaths": ["/images/lamed.png"],
+    "imagePaths": ["/images/lamed1.png", "/images/lamed2.png", "/images/lamed3.png"],
     "audioLetterPath": "/audio/lamed.mp3",
     "audioWordPath": "/audio/word-lamed.mp3",
     "color": "#98D8C8"
@@ -124,7 +124,7 @@
     "letter": "מ",
     "name": "מֵם",
     "word": "מָכוֹנִית",
-    "imagePaths": ["/images/mem.png"],
+    "imagePaths": ["/images/mem1.png", "/images/mem2.png", "/images/mem3.png"],
     "audioLetterPath": "/audio/mem.mp3",
     "audioWordPath": "/audio/word-mem.mp3",
     "color": "#B5A7D5"
@@ -134,7 +134,7 @@
     "letter": "נ",
     "name": "נוּן",
     "word": "נָחָשׁ",
-    "imagePaths": ["/images/nun.png"],
+    "imagePaths": ["/images/nun1.png", "/images/nun2.png", "/images/nun3.png"],
     "audioLetterPath": "/audio/nun.mp3",
     "audioWordPath": "/audio/word-nun.mp3",
     "color": "#FF8FAB"
@@ -144,7 +144,7 @@
     "letter": "ס",
     "name": "סָמֶךְ",
     "word": "סוּס",
-    "imagePaths": ["/images/samekh.png"],
+    "imagePaths": ["/images/samekh1.png", "/images/samekh2.png", "/images/samekh3.png"],
     "audioLetterPath": "/audio/samekh.mp3",
     "audioWordPath": "/audio/word-samekh.mp3",
     "color": "#95E1D3"
@@ -154,7 +154,7 @@
     "letter": "ע",
     "name": "עַיִן",
     "word": "עֵץ",
-    "imagePaths": ["/images/ayin.png"],
+    "imagePaths": ["/images/ayin1.png", "/images/ayin2.png", "/images/ayin3.png"],
     "audioLetterPath": "/audio/ayin.mp3",
     "audioWordPath": "/audio/word-ayin.mp3",
     "color": "#FFB347"
@@ -164,7 +164,7 @@
     "letter": "פ",
     "name": "פֵּא",
     "word": "פִּיל",
-    "imagePaths": ["/images/pe.png"],
+    "imagePaths": ["/images/pe1.png", "/images/pe2.png", "/images/pe3.png"],
     "audioLetterPath": "/audio/pe.mp3",
     "audioWordPath": "/audio/word-pe.mp3",
     "color": "#98D8C8"
@@ -174,7 +174,7 @@
     "letter": "צ",
     "name": "צַדִּי",
     "word": "צָב",
-    "imagePaths": ["/images/tsadi.png"],
+    "imagePaths": ["/images/tsadi1.png", "/images/tsadi2.png", "/images/tsadi3.png"],
     "audioLetterPath": "/audio/tsadi.mp3",
     "audioWordPath": "/audio/word-tsadi.mp3",
     "color": "#B5A7D5"
@@ -184,7 +184,7 @@
     "letter": "ק",
     "name": "קוֹף",
     "word": "קוֹף",
-    "imagePaths": ["/images/qof.png"],
+    "imagePaths": ["/images/kof1.png", "/images/kof2.png", "/images/kof3.png"],
     "audioLetterPath": "/audio/qof.mp3",
     "audioWordPath": "/audio/word-qof.mp3",
     "color": "#FF8FAB"
@@ -194,7 +194,7 @@
     "letter": "ר",
     "name": "רֵישׁ",
     "word": "רַכֶּבֶת",
-    "imagePaths": ["/images/resh.png"],
+    "imagePaths": ["/images/resh1.png", "/images/resh2.png", "/images/resh3.png"],
     "audioLetterPath": "/audio/resh.mp3",
     "audioWordPath": "/audio/word-resh.mp3",
     "color": "#95E1D3"
@@ -204,7 +204,7 @@
     "letter": "ש",
     "name": "שִׁין",
     "word": "שֶׁמֶשׁ",
-    "imagePaths": ["/images/shin.png"],
+    "imagePaths": ["/images/shin1.png", "/images/shin2.png"],
     "audioLetterPath": "/audio/shin.mp3",
     "audioWordPath": "/audio/word-shin.mp3",
     "color": "#FFB347"
@@ -214,7 +214,7 @@
     "letter": "ת",
     "name": "תָּו",
     "word": "תַּפּוּחַ",
-    "imagePaths": ["/images/tav.png"],
+    "imagePaths": ["/images/tav1.png", "/images/tav2.png", "/images/tav3.png"],
     "audioLetterPath": "/audio/tav.mp3",
     "audioWordPath": "/audio/word-tav.mp3",
     "color": "#98D8C8"

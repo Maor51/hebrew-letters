@@ -72,15 +72,16 @@ describe('LetterView', () => {
   it('renders an image for each path in imagePaths', () => {
     renderLetterView('alef')
     const imgs = screen.getAllByRole('img')
-    expect(imgs).toHaveLength(1)
-    expect(imgs[0]).toHaveAttribute('src', '/images/alef.png')
+    expect(imgs).toHaveLength(2)
+    expect(imgs[0]).toHaveAttribute('src', '/images/alef1.png')
+    expect(imgs[1]).toHaveAttribute('src', '/images/alef2.png')
   })
 
   it('shows placeholder when all images fail to load', async () => {
     renderLetterView('alef')
-    const img = screen.getByRole('img')
+    const imgs = screen.getAllByRole('img')
     await act(async () => {
-      img.dispatchEvent(new Event('error'))
+      imgs.forEach((img) => img.dispatchEvent(new Event('error')))
     })
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
     expect(screen.getByText('🖼️')).toBeInTheDocument()

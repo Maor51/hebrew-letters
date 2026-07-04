@@ -101,7 +101,7 @@ export function LetterPuzzle({ letter, onComplete }) {
     }
   }, [difficulty, imageIndex, letter.imagePaths.length, onComplete])
 
-  const pieceSize = Math.floor(280 / cols)
+  const pieceSize = Math.floor(340 / cols)
   const solvedIds = new Set(pieces.filter((p) => p.solved).map((p) => p.id))
 
   return (

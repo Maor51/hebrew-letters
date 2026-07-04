@@ -100,7 +100,7 @@ export function BalloonPop({ letter, allLetters, onComplete }) {
       </div>
 
       {/* Balloon field */}
-      <div style={{ position: 'relative', height: '200px', overflow: 'hidden', marginBottom: '14px' }}>
+      <div style={{ position: 'relative', height: '320px', overflow: 'hidden', marginBottom: '14px' }}>
         {balloons.map((balloon) => {
           const { from } = CARD_COLORS[balloon.colorIndex % 5]
           const isPopped = poppedId === balloon.id
@@ -135,12 +135,12 @@ export function BalloonPop({ letter, allLetters, onComplete }) {
               }
             >
               <div style={{
-                width: '72px', height: '72px', borderRadius: '50%',
+                width: '96px', height: '96px', borderRadius: '50%',
                 background: `radial-gradient(circle at 35% 35%, ${from}cc, ${from})`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
               }}>
-                <span style={{ fontSize: '36px', fontWeight: 900, color: 'white', textShadow: '0 2px 4px rgba(0,0,0,0.2)', lineHeight: 1 }}>
+                <span style={{ fontSize: '48px', fontWeight: 900, color: 'white', textShadow: '0 2px 4px rgba(0,0,0,0.2)', lineHeight: 1 }}>
                   {balloon.letter}
                 </span>
               </div>
