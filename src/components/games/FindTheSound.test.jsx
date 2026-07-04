@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import { FindTheSound } from './FindTheSound'
 
 vi.mock('react-confetti', () => ({ default: () => null }))
@@ -33,15 +33,17 @@ describe('FindTheSound', () => {
   })
 
   it('calls onComplete after 3 correct taps', async () => {
+    vi.useFakeTimers()
     const onComplete = vi.fn()
-    render(
-      <FindTheSound letter={alef} allLetters={allLetters} onComplete={onComplete} />
-    )
-    // Tap the correct card 3 times (card shows letter.letter = 'א')
-    // After 1 correct tap, onComplete not yet called
-    const correctBtn = screen.getByTestId('card-alef')
-    fireEvent.click(correctBtn)
-    // After 1 correct tap, onComplete not yet called
-    expect(onComplete).not.toHaveBeenCalled()
+    render(<FindTheSound letter={alef} allLetters={allLetters} onComplete={onComplete} />)
+
+    for (let round = 0; round < 3; round++) {
+      const btn = screen.getByTestId('card-alef')
+      fireEvent.click(btn)
+      await act(async () => { vi.advanceTimersByTime(1200) })
+    }
+
+    expect(onComplete).toHaveBeenCalledTimes(1)
+    vi.useRealTimers()
   })
 })

@@ -18,10 +18,9 @@ function playAudio(path) {
 }
 
 function buildOptions(letter, allLetters) {
-  const distractors = allLetters
-    .filter((l) => l.id !== letter.id)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 3)
+  const distractors = shuffle(
+    allLetters.filter((l) => l.id !== letter.id)
+  ).slice(0, 3)
   return shuffle([letter, ...distractors])
 }
 
@@ -34,8 +33,15 @@ export function FindTheSound({ letter, allLetters, onComplete }) {
   const [correctId, setCorrectId] = useState(null)
   const [showConfetti, setShowConfetti] = useState(false)
   const doneRef = useRef(false)
+  const timersRef = useRef([])
 
   useEffect(() => {
+    return () => timersRef.current.forEach(clearTimeout)
+  }, [])
+
+  useEffect(() => {
+    timersRef.current.forEach(clearTimeout)
+    timersRef.current = []
     setOptions(buildOptions(letter, allLetters))
     setCorrectRounds(0)
     setWrongId(null)
@@ -52,22 +58,22 @@ export function FindTheSound({ letter, allLetters, onComplete }) {
     if (option.id === letter.id) {
       setCorrectId(option.id)
       setShowConfetti(true)
-      setTimeout(() => setShowConfetti(false), 1500)
+      timersRef.current.push(setTimeout(() => setShowConfetti(false), 1500))
       const next = correctRounds + 1
       if (next >= TOTAL_ROUNDS) {
         doneRef.current = true
-        setTimeout(() => onComplete(), 1200)
+        timersRef.current.push(setTimeout(() => onComplete(), 1200))
       } else {
-        setTimeout(() => {
+        timersRef.current.push(setTimeout(() => {
           setCorrectRounds(next)
           setOptions(buildOptions(letter, allLetters))
           setCorrectId(null)
           setWrongId(null)
-        }, 1000)
+        }, 1000))
       }
     } else {
       setWrongId(option.id)
-      setTimeout(() => setWrongId(null), 500)
+      timersRef.current.push(setTimeout(() => setWrongId(null), 500))
     }
   }
 
