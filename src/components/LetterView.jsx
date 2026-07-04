@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
@@ -37,17 +37,20 @@ export function LetterView() {
 
   const handleGameComplete = (key) => {
     setGameDone((prev) => {
-      const next = { ...prev, [key]: true }
-      if (next.findTheSound && next.balloonPop && next.letterPuzzle) {
-        if (!isVisited(id)) {
-          setShowConfetti(true)
-          setTimeout(() => setShowConfetti(false), 2500)
-        }
-        markVisited(id)
-      }
-      return next
+      if (prev[key]) return prev
+      return { ...prev, [key]: true }
     })
   }
+
+  useEffect(() => {
+    if (gameDone.findTheSound && gameDone.balloonPop && gameDone.letterPuzzle) {
+      if (!isVisited(id)) {
+        setShowConfetti(true)
+        setTimeout(() => setShowConfetti(false), 2500)
+      }
+      markVisited(id)
+    }
+  }, [gameDone, id, isVisited, markVisited])
 
   if (!letter) return null
 
