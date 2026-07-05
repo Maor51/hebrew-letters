@@ -26,7 +26,7 @@ function buildBalloons(letter, allLetters) {
     ...l,
     xPercent: xPositions[i],
     duration: 2.5 + Math.random() * 1.5,
-    delay: Math.random() * 0.6,
+    delay: 0,
     colorIndex: i,
   }))
 }

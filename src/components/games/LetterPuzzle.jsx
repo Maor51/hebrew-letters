@@ -11,13 +11,9 @@ const GRID_CONFIGS = {
 
 const DIFFICULTY_OPTIONS = [6, 8, 10, 12]
 
-// Fixed puzzle area — keeps the same overall picture size for every difficulty.
-// Pieces get smaller as difficulty rises; the assembled image stays 441×294.
-const PUZZLE_W = 441  // ≈30% larger than original 340
-const PUZZLE_H = 294  // ≈30% larger than original 226; 3:2 ratio
-
-// Generous snap: pointer just needs to land anywhere within one piece-width of the slot centre
-const SNAP_PX = 150
+// Fixed puzzle area — pieces get smaller as difficulty rises; assembled image stays constant.
+const PUZZLE_W = 441
+const PUZZLE_H = 294
 
 function buildPieces(cols, rows) {
   const pieces = []
@@ -40,12 +36,13 @@ export function LetterPuzzle({ letter, onComplete }) {
   const [pieces, setPieces] = useState(() => buildPieces(3, 2))
   const [showConfetti, setShowConfetti] = useState(false)
   const slotRefs = useRef({})
+  const pieceRefs = useRef({})
+  const dragStartPos = useRef({})
   const doneRef = useRef(false)
   const timersRef = useRef([])
   const { cols, rows } = GRID_CONFIGS[difficulty]
   const imagePath = letter.imagePaths[imageIndex]
 
-  // Piece dimensions derived from fixed puzzle area
   const pieceW = Math.floor(PUZZLE_W / cols)
   const pieceH = Math.floor(PUZZLE_H / rows)
 
@@ -68,50 +65,62 @@ export function LetterPuzzle({ letter, onComplete }) {
     setPieces(buildPieces(cols, rows))
   }, [difficulty, imageIndex, letter.id])
 
+  const handleDragStart = useCallback((piece) => {
+    const el = pieceRefs.current[piece.id]
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    dragStartPos.current[piece.id] = {
+      cx: rect.left + rect.width / 2,
+      cy: rect.top + rect.height / 2,
+    }
+  }, [])
+
   const handleDragEnd = useCallback((piece, _event, info) => {
     if (piece.solved) return
 
-    // info.point uses pageX/pageY (page-relative).
-    // getBoundingClientRect() is viewport-relative.
-    // Subtract scroll to convert to the same coordinate space.
-    const px = info.point.x - window.scrollX
-    const py = info.point.y - window.scrollY
+    const startPos = dragStartPos.current[piece.id]
+    if (!startPos) return
 
-    let bestSlotId = null
-    let bestDist = SNAP_PX
+    // Piece center at release = tray-position center + total drag offset
+    const pieceCx = startPos.cx + info.offset.x
+    const pieceCy = startPos.cy + info.offset.y
+
+    // Snap if piece center lands anywhere inside the target slot's area
+    const snapX = pieceW / 2
+    const snapY = pieceH / 2
+
+    let matched = false
     Object.entries(slotRefs.current).forEach(([slotId, el]) => {
-      if (!el) return
+      if (!el || slotId !== piece.id) return
       const sr = el.getBoundingClientRect()
       const slotCx = sr.left + sr.width / 2
       const slotCy = sr.top + sr.height / 2
-      const dist = Math.hypot(px - slotCx, py - slotCy)
-      if (dist < bestDist) {
-        bestDist = dist
-        bestSlotId = slotId
+      if (Math.abs(pieceCx - slotCx) <= snapX && Math.abs(pieceCy - slotCy) <= snapY) {
+        matched = true
       }
     })
 
-    if (bestSlotId === piece.id) {
-      setPieces((prev) => {
-        const next = prev.map((p) => p.id === piece.id ? { ...p, solved: true } : p)
-        const allSolved = next.every((p) => p.solved)
-        if (allSolved && !doneRef.current) {
-          doneRef.current = true
-          setShowConfetti(true)
-          timersRef.current.push(setTimeout(() => setShowConfetti(false), 1500))
-          const hasNextImage = imageIndex + 1 < letter.imagePaths.length
-          timersRef.current.push(setTimeout(() => {
-            if (hasNextImage) {
-              setImageIndex((i) => i + 1)
-            } else {
-              onComplete()
-            }
-          }, 2000))
-        }
-        return next
-      })
-    }
-  }, [imageIndex, letter.imagePaths.length, onComplete])
+    if (!matched) return
+
+    setPieces((prev) => {
+      const next = prev.map((p) => p.id === piece.id ? { ...p, solved: true } : p)
+      const allSolved = next.every((p) => p.solved)
+      if (allSolved && !doneRef.current) {
+        doneRef.current = true
+        setShowConfetti(true)
+        timersRef.current.push(setTimeout(() => setShowConfetti(false), 1500))
+        const hasNextImage = imageIndex + 1 < letter.imagePaths.length
+        timersRef.current.push(setTimeout(() => {
+          if (hasNextImage) {
+            setImageIndex((i) => i + 1)
+          } else {
+            onComplete()
+          }
+        }, 2000))
+      }
+      return next
+    })
+  }, [pieceW, pieceH, imageIndex, letter.imagePaths.length, onComplete])
 
   const solvedIds = new Set(pieces.filter((p) => p.solved).map((p) => p.id))
 
@@ -236,9 +245,11 @@ export function LetterPuzzle({ letter, onComplete }) {
               key={piece.id}
               layoutId={`piece-${piece.id}`}
               data-testid={`piece-${piece.id}`}
+              ref={(el) => { pieceRefs.current[piece.id] = el }}
               drag
               dragMomentum={false}
               dragSnapToOrigin
+              onDragStart={() => handleDragStart(piece)}
               onDragEnd={(_e, info) => handleDragEnd(piece, _e, info)}
               whileDrag={{ scale: 1.1, zIndex: 50, cursor: 'grabbing' }}
               style={{
