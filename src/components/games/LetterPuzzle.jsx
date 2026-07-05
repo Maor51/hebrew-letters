@@ -93,10 +93,11 @@ export function LetterPuzzle({ letter, onComplete }) {
     const slotCx = sr.left + sr.width / 2
     const slotCy = sr.top + sr.height / 2
 
-    // Generous match: piece center within 60% of piece dimension from slot center
-    // (corresponds to ~40% overlap; forgiving for the 6-piece easy mode too)
-    if (Math.abs(pieceCx - slotCx) > pieceW * 0.6) return
-    if (Math.abs(pieceCy - slotCy) > pieceH * 0.6) return
+    // Piece center must land inside the target slot's actual area.
+    // Anything more generous overlaps into neighbouring slots and would
+    // accept drops in the wrong place.
+    if (Math.abs(pieceCx - slotCx) > pieceW / 2) return
+    if (Math.abs(pieceCy - slotCy) > pieceH / 2) return
 
     setPieces((prev) => {
       const next = prev.map((p) => p.id === piece.id ? { ...p, solved: true } : p)

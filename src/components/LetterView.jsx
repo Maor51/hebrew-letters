@@ -54,7 +54,10 @@ export function LetterView() {
   if (!letter) return null
 
   const nextIndex = (letterIndex + 1) % letters.length
-  const handleVideoEnd = () => navigate(`/letter/${letters[nextIndex].id}`)
+  const handleVideoEnd = () => {
+    setShowVideo(false)
+    navigate(`/letter/${letters[nextIndex].id}`)
+  }
   const letterColor = CARD_COLORS[letterIndex % 5].from
   const hasVisibleImage = letter.imagePaths.some((_, i) => !imgErrors.has(i))
 
@@ -116,27 +119,22 @@ export function LetterView() {
 
       {/* Glassmorphism card */}
       <div className="px-4 pt-4 pb-2">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={id}
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -24 }}
-            transition={{ duration: 0.22, ease: 'easeOut' }}
-            style={{
-              background: 'rgba(255,255,255,0.82)',
-              backdropFilter: 'blur(16px)',
-              borderRadius: '28px',
-              border: '1.5px solid rgba(255,255,255,0.75)',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05)',
-              padding: '28px 20px 22px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '14px',
-            }}
-            dir="rtl"
-          >
+        <div
+          key={id}
+          style={{
+            background: 'rgba(255,255,255,0.82)',
+            backdropFilter: 'blur(16px)',
+            borderRadius: '28px',
+            border: '1.5px solid rgba(255,255,255,0.75)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05)',
+            padding: '28px 20px 22px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '14px',
+          }}
+          dir="rtl"
+        >
             <span
               className="cursor-pointer select-none leading-none"
               style={{
@@ -202,8 +200,7 @@ export function LetterView() {
                 </div>
               )}
             </div>
-          </motion.div>
-        </AnimatePresence>
+        </div>
       </div>
 
       {/* Nav row */}
