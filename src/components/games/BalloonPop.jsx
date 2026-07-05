@@ -35,6 +35,7 @@ const TOTAL_ROUNDS = 3
 
 export function BalloonPop({ letter, allLetters, onComplete }) {
   const [balloons, setBalloons] = useState(() => buildBalloons(letter, allLetters))
+  const [roundKey, setRoundKey] = useState(0)
   const [poppedId, setPoppedId] = useState(null)
   const [wrongId, setWrongId] = useState(null)
   const [correctRounds, setCorrectRounds] = useState(0)
@@ -50,6 +51,7 @@ export function BalloonPop({ letter, allLetters, onComplete }) {
     timersRef.current.forEach(clearTimeout)
     timersRef.current = []
     setBalloons(buildBalloons(letter, allLetters))
+    setRoundKey((k) => k + 1)
     setCorrectRounds(0)
     setPoppedId(null)
     setWrongId(null)
@@ -74,6 +76,7 @@ export function BalloonPop({ letter, allLetters, onComplete }) {
         } else {
           timersRef.current.push(setTimeout(() => {
             setBalloons(buildBalloons(letter, allLetters))
+            setRoundKey((k) => k + 1)
             setPoppedId(null)
             setWrongId(null)
           }, 1000))
@@ -108,7 +111,7 @@ export function BalloonPop({ letter, allLetters, onComplete }) {
           const isWrong = wrongId === balloon.id
           return (
             <motion.div
-              key={balloon.id}
+              key={`${roundKey}-${balloon.id}`}
               data-testid={`balloon-${balloon.id}`}
               onClick={() => handleTap(balloon)}
               style={{

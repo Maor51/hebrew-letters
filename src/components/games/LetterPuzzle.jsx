@@ -37,7 +37,7 @@ export function LetterPuzzle({ letter, onComplete }) {
   const [showConfetti, setShowConfetti] = useState(false)
   const slotRefs = useRef({})
   const pieceRefs = useRef({})
-  const dragStartPos = useRef({})
+  const lastDragRect = useRef({})
   const doneRef = useRef(false)
   const timersRef = useRef([])
   const { cols, rows } = GRID_CONFIGS[difficulty]
@@ -65,42 +65,38 @@ export function LetterPuzzle({ letter, onComplete }) {
     setPieces(buildPieces(cols, rows))
   }, [difficulty, imageIndex, letter.id])
 
-  const handleDragStart = useCallback((piece) => {
-    const el = pieceRefs.current[piece.id]
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    dragStartPos.current[piece.id] = {
-      cx: rect.left + rect.width / 2,
-      cy: rect.top + rect.height / 2,
-    }
+  const handleDrag = useCallback((pieceId) => {
+    const el = pieceRefs.current[pieceId]
+    if (el) lastDragRect.current[pieceId] = el.getBoundingClientRect()
   }, [])
 
-  const handleDragEnd = useCallback((piece, _event, info) => {
+  const handleDragEnd = useCallback((piece) => {
     if (piece.solved) return
 
-    const startPos = dragStartPos.current[piece.id]
-    if (!startPos) return
+    // Prefer rect captured mid-drag; fall back to reading now
+    // (rects read synchronously in onDragEnd sometimes miss the drop position
+    // because dragSnapToOrigin can start its animation on the same frame).
+    let rect = lastDragRect.current[piece.id]
+    if (!rect) {
+      const el = pieceRefs.current[piece.id]
+      if (el) rect = el.getBoundingClientRect()
+    }
+    delete lastDragRect.current[piece.id]
+    if (!rect) return
 
-    // Piece center at release = tray-position center + total drag offset
-    const pieceCx = startPos.cx + info.offset.x
-    const pieceCy = startPos.cy + info.offset.y
+    const pieceCx = rect.left + rect.width / 2
+    const pieceCy = rect.top + rect.height / 2
 
-    // Snap if piece center lands anywhere inside the target slot's area
-    const snapX = pieceW / 2
-    const snapY = pieceH / 2
+    const slotEl = slotRefs.current[piece.id]
+    if (!slotEl) return
+    const sr = slotEl.getBoundingClientRect()
+    const slotCx = sr.left + sr.width / 2
+    const slotCy = sr.top + sr.height / 2
 
-    let matched = false
-    Object.entries(slotRefs.current).forEach(([slotId, el]) => {
-      if (!el || slotId !== piece.id) return
-      const sr = el.getBoundingClientRect()
-      const slotCx = sr.left + sr.width / 2
-      const slotCy = sr.top + sr.height / 2
-      if (Math.abs(pieceCx - slotCx) <= snapX && Math.abs(pieceCy - slotCy) <= snapY) {
-        matched = true
-      }
-    })
-
-    if (!matched) return
+    // Generous match: piece center within 60% of piece dimension from slot center
+    // (corresponds to ~40% overlap; forgiving for the 6-piece easy mode too)
+    if (Math.abs(pieceCx - slotCx) > pieceW * 0.6) return
+    if (Math.abs(pieceCy - slotCy) > pieceH * 0.6) return
 
     setPieces((prev) => {
       const next = prev.map((p) => p.id === piece.id ? { ...p, solved: true } : p)
@@ -249,8 +245,8 @@ export function LetterPuzzle({ letter, onComplete }) {
               drag
               dragMomentum={false}
               dragSnapToOrigin
-              onDragStart={() => handleDragStart(piece)}
-              onDragEnd={(_e, info) => handleDragEnd(piece, _e, info)}
+              onDrag={() => handleDrag(piece.id)}
+              onDragEnd={() => handleDragEnd(piece)}
               whileDrag={{ scale: 1.1, zIndex: 50, cursor: 'grabbing' }}
               style={{
                 width: pieceW,
