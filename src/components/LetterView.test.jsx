@@ -39,11 +39,6 @@ describe('LetterView', () => {
     expect(screen.getByText('א')).toBeInTheDocument()
   })
 
-  it('renders the Hebrew word', () => {
-    renderLetterView('alef')
-    expect(screen.getByText('אַרְיֵה')).toBeInTheDocument()
-  })
-
   it('renders the NavBar', () => {
     renderLetterView('alef')
     expect(screen.getByText('1 מתוך 22')).toBeInTheDocument()

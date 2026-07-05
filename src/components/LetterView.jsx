@@ -131,33 +131,37 @@ export function LetterView() {
               🔊 הקש לשמוע
             </span>
 
-            <p style={{ fontSize: '34px', fontWeight: 900, color: '#1e293b', margin: 0 }}>
-              {letter.word}
-            </p>
-
             <div
               className="w-full cursor-pointer select-none"
               onClick={() => playAudio(letter.audioWordPath)}
             >
               {hasVisibleImage ? (
-                <div style={{ display: 'flex', gap: '10px', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', gap: '10px' }}>
                   {letter.imagePaths.map((src, i) =>
                     imgErrors.has(i) ? null : (
-                      <img
+                      <div
                         key={src}
-                        src={src}
-                        alt={letter.word}
                         style={{
                           flex: 1,
                           minWidth: 0,
                           height: '160px',
-                          objectFit: 'contain',
                           borderRadius: '12px',
-                          display: 'block',
+                          overflow: 'hidden',
                           backgroundColor: 'white',
                         }}
-                        onError={() => setImgErrors((prev) => new Set([...prev, i]))}
-                      />
+                      >
+                        <img
+                          src={src}
+                          alt={letter.word}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain',
+                            display: 'block',
+                          }}
+                          onError={() => setImgErrors((prev) => new Set([...prev, i]))}
+                        />
+                      </div>
                     )
                   )}
                 </div>
@@ -183,24 +187,59 @@ export function LetterView() {
       <NavBar currentId={id} />
 
       {/* Games */}
-      <div className="px-4 pb-10" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
-        <FindTheSound
-          letter={letter}
-          allLetters={letters}
-          onComplete={() => handleGameComplete('findTheSound')}
-        />
-        <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
-        <BalloonPop
-          letter={letter}
-          allLetters={letters}
-          onComplete={() => handleGameComplete('balloonPop')}
-        />
-        <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
-        <LetterPuzzle
-          letter={letter}
-          onComplete={() => handleGameComplete('letterPuzzle')}
-        />
+      <div className="px-4 pb-10" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <AnimatePresence>
+          {!gameDone.findTheSound && (
+            <motion.div
+              key="findTheSound"
+              exit={{ opacity: 0, scale: 0.75, y: -12 }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 1, 1] }}
+              style={{ overflow: 'hidden', transformOrigin: 'top center' }}
+            >
+              <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
+              <FindTheSound
+                letter={letter}
+                allLetters={letters}
+                onComplete={() => handleGameComplete('findTheSound')}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {!gameDone.balloonPop && (
+            <motion.div
+              key="balloonPop"
+              exit={{ opacity: 0, scale: 0.75, y: -12 }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 1, 1] }}
+              style={{ overflow: 'hidden', transformOrigin: 'top center' }}
+            >
+              <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
+              <BalloonPop
+                letter={letter}
+                allLetters={letters}
+                onComplete={() => handleGameComplete('balloonPop')}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {!gameDone.letterPuzzle && (
+            <motion.div
+              key="letterPuzzle"
+              exit={{ opacity: 0, scale: 0.75, y: -12 }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 1, 1] }}
+              style={{ overflow: 'hidden', transformOrigin: 'top center' }}
+            >
+              <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
+              <LetterPuzzle
+                letter={letter}
+                onComplete={() => handleGameComplete('letterPuzzle')}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )

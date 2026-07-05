@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import letters from '../data/letters.json'
@@ -6,6 +7,7 @@ import { useProgress } from '../contexts/ProgressContext'
 export function MainMenu() {
   const navigate = useNavigate()
   const { isVisited, visitedCount } = useProgress()
+  const [heroBroken, setHeroBroken] = useState(false)
 
   return (
     <div
@@ -13,6 +15,23 @@ export function MainMenu() {
       style={{ background: 'linear-gradient(160deg, #e0f2fe 0%, #f0fdf4 50%, #fef9c3 100%)' }}
     >
       <div className="text-center px-6" style={{ maxWidth: '420px', width: '100%' }}>
+        {!heroBroken && (
+          <img
+            src="/images/home.png"
+            onError={() => setHeroBroken(true)}
+            alt=""
+            style={{
+              width: '100%',
+              maxHeight: '220px',
+              objectFit: 'contain',
+              borderRadius: '20px',
+              marginBottom: '16px',
+              backgroundColor: 'white',
+              display: 'block',
+            }}
+          />
+        )}
+
         <h1
           className="font-black mb-3"
           style={{ fontSize: '28px', color: '#f97316', lineHeight: 1.35 }}
