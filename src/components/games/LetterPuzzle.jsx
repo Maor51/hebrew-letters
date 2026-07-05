@@ -10,8 +10,6 @@ const GRID_CONFIGS = {
 }
 
 const DIFFICULTY_OPTIONS = [6, 8, 10, 12]
-// Threshold as a fraction of piece size — set at render time
-const SNAP_FRACTION = 0.65
 
 function buildPieces(cols, rows) {
   const pieces = []
@@ -34,13 +32,13 @@ export function LetterPuzzle({ letter, onComplete }) {
   const [pieces, setPieces] = useState(() => buildPieces(3, 2))
   const [showConfetti, setShowConfetti] = useState(false)
   const slotRefs = useRef({})
-  const pieceRefs = useRef({})
   const doneRef = useRef(false)
   const timersRef = useRef([])
   const { cols, rows } = GRID_CONFIGS[difficulty]
   const imagePath = letter.imagePaths[imageIndex]
   const pieceSize = Math.floor(340 / cols)
-  const snapThreshold = pieceSize * SNAP_FRACTION
+  // Allow release anywhere within ~1 piece-width of the slot center
+  const snapThreshold = pieceSize * 1.2
 
   useEffect(() => {
     return () => timersRef.current.forEach(clearTimeout)
@@ -58,19 +56,16 @@ export function LetterPuzzle({ letter, onComplete }) {
   useEffect(() => {
     const { cols, rows } = GRID_CONFIGS[difficulty]
     doneRef.current = false
-    pieceRefs.current = {}
     setPieces(buildPieces(cols, rows))
   }, [difficulty, imageIndex, letter.id])
 
-  const handleDragEnd = useCallback((piece) => {
+  const handleDragEnd = useCallback((piece, _event, info) => {
     if (piece.solved) return
 
-    // Compare piece center to slot center — both viewport-relative via getBoundingClientRect
-    const pieceEl = pieceRefs.current[piece.id]
-    if (!pieceEl) return
-    const pr = pieceEl.getBoundingClientRect()
-    const pieceCx = pr.left + pr.width / 2
-    const pieceCy = pr.top + pr.height / 2
+    // info.point is clientX/clientY (viewport-relative) captured at pointer release,
+    // before dragSnapToOrigin animation begins — safe to compare with getBoundingClientRect
+    const px = info.point.x
+    const py = info.point.y
 
     let bestSlotId = null
     let bestDist = snapThreshold
@@ -79,7 +74,7 @@ export function LetterPuzzle({ letter, onComplete }) {
       const sr = el.getBoundingClientRect()
       const slotCx = sr.left + sr.width / 2
       const slotCy = sr.top + sr.height / 2
-      const dist = Math.hypot(pieceCx - slotCx, pieceCy - slotCy)
+      const dist = Math.hypot(px - slotCx, py - slotCy)
       if (dist < bestDist) {
         bestDist = dist
         bestSlotId = slotId
@@ -106,7 +101,7 @@ export function LetterPuzzle({ letter, onComplete }) {
         return next
       })
     }
-  }, [imageIndex, letter.imagePaths.length, onComplete, snapThreshold])
+  }, [imageIndex, letter.imagePaths.length, onComplete, snapThreshold])  // snapThreshold depends on pieceSize/cols
 
   const solvedIds = new Set(pieces.filter((p) => p.solved).map((p) => p.id))
 
@@ -227,11 +222,10 @@ export function LetterPuzzle({ letter, onComplete }) {
               key={piece.id}
               layoutId={`piece-${piece.id}`}
               data-testid={`piece-${piece.id}`}
-              ref={(el) => { pieceRefs.current[piece.id] = el }}
               drag
               dragMomentum={false}
               dragSnapToOrigin
-              onDragEnd={() => handleDragEnd(piece)}
+              onDragEnd={(_e, info) => handleDragEnd(piece, _e, info)}
               whileDrag={{ scale: 1.1, zIndex: 50, cursor: 'grabbing' }}
               style={{
                 width: pieceSize,
