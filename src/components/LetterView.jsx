@@ -49,7 +49,12 @@ export function LetterView() {
       markVisited(id)
       videoTimerRef.current = setTimeout(() => setShowVideo(true), 400)
     }
-  }, [gameDone, id, markVisited])
+    // `id` intentionally omitted: on letter change, the [id] effect resets
+    // gameDone but its state update hasn't applied yet — including id here
+    // would re-fire with stale (all-true) gameDone and schedule the video
+    // for the next letter.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameDone, markVisited])
 
   if (!letter) return null
 

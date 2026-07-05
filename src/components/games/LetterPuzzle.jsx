@@ -126,7 +126,10 @@ export function LetterPuzzle({ letter, onComplete }) {
 
   return (
     <LayoutGroup>
-      <div style={{ padding: '12px 0' }} dir="rtl">
+      {/* Intentionally NOT dir="rtl": CSS Grid in RTL reverses columns,
+          which mirrors the puzzle (col=0 slot shows left-of-image but
+          renders on the right). Hebrew text renders correctly via bidi. */}
+      <div style={{ padding: '12px 0' }}>
         {showConfetti && <ReactConfetti recycle={false} numberOfPieces={200} colors={['#fb923c', '#34d399', '#a78bfa', '#f472b6', '#38bdf8']} />}
 
         <p style={{ textAlign: 'center', fontWeight: 700, fontSize: '16px', color: '#1e293b', marginBottom: '12px' }}>
