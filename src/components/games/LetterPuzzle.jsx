@@ -10,7 +10,7 @@ const GRID_CONFIGS = {
 }
 
 const DIFFICULTY_OPTIONS = [6, 8, 10, 12]
-const SNAP_THRESHOLD = 40
+const SNAP_THRESHOLD = 80
 
 function buildPieces(cols, rows) {
   const pieces = []
@@ -64,7 +64,9 @@ export function LetterPuzzle({ letter, onComplete }) {
 
   const handleDragEnd = useCallback((piece, _event, info) => {
     if (piece.solved) return
-    // Find closest unsolved slot within threshold
+    // info.point is document-relative; getBoundingClientRect is viewport-relative
+    const px = info.point.x - window.scrollX
+    const py = info.point.y - window.scrollY
     let bestSlotId = null
     let bestDist = SNAP_THRESHOLD
     Object.entries(slotRefs.current).forEach(([slotId, el]) => {
@@ -72,7 +74,7 @@ export function LetterPuzzle({ letter, onComplete }) {
       const rect = el.getBoundingClientRect()
       const slotCx = rect.left + rect.width / 2
       const slotCy = rect.top + rect.height / 2
-      const dist = Math.hypot(info.point.x - slotCx, info.point.y - slotCy)
+      const dist = Math.hypot(px - slotCx, py - slotCy)
       if (dist < bestDist) {
         bestDist = dist
         bestSlotId = slotId

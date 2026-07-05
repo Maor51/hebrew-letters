@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import ReactConfetti from 'react-confetti'
 import letters from '../data/letters.json'
 import { useProgress } from '../contexts/ProgressContext'
 import { NavBar } from './NavBar'
@@ -21,8 +20,8 @@ export function LetterView() {
   const letterIndex = letters.findIndex((l) => l.id === id)
   const letter = letters[letterIndex]
   const { isVisited, markVisited } = useProgress()
-  const confettiTimerRef = useRef(null)
-  const [showConfetti, setShowConfetti] = useState(false)
+  const videoTimerRef = useRef(null)
+  const [showVideo, setShowVideo] = useState(false)
   const [imgErrors, setImgErrors] = useState(new Set())
   const [gameDone, setGameDone] = useState({
     findTheSound: false,
@@ -30,11 +29,12 @@ export function LetterView() {
     letterPuzzle: false,
   })
 
-  // Reset game completion when letter changes
+  // Reset when letter changes
   useEffect(() => {
-    if (confettiTimerRef.current) clearTimeout(confettiTimerRef.current)
+    if (videoTimerRef.current) clearTimeout(videoTimerRef.current)
     setGameDone({ findTheSound: false, balloonPop: false, letterPuzzle: false })
     setImgErrors(new Set())
+    setShowVideo(false)
   }, [id])
 
   const handleGameComplete = (key) => {
@@ -46,16 +46,15 @@ export function LetterView() {
 
   useEffect(() => {
     if (gameDone.findTheSound && gameDone.balloonPop && gameDone.letterPuzzle) {
-      if (!isVisited(id)) {
-        setShowConfetti(true)
-        confettiTimerRef.current = setTimeout(() => setShowConfetti(false), 2500)
-      }
       markVisited(id)
+      videoTimerRef.current = setTimeout(() => setShowVideo(true), 400)
     }
-  }, [gameDone, id, isVisited, markVisited])
+  }, [gameDone, id, markVisited])
 
   if (!letter) return null
 
+  const nextIndex = (letterIndex + 1) % letters.length
+  const handleVideoEnd = () => navigate(`/letter/${letters[nextIndex].id}`)
   const letterColor = CARD_COLORS[letterIndex % 5].from
   const hasVisibleImage = letter.imagePaths.some((_, i) => !imgErrors.has(i))
 
@@ -63,12 +62,36 @@ export function LetterView() {
     <div
       style={{ background: 'linear-gradient(160deg, #e0f2fe 0%, #f0fdf4 50%, #fef9c3 100%)', minHeight: '100vh' }}
     >
-      {showConfetti && (
-        <ReactConfetti
-          recycle={false}
-          numberOfPieces={300}
-          colors={['#fb923c', '#34d399', '#a78bfa', '#f472b6', '#38bdf8', '#FFD700']}
-        />
+      {/* Celebration video overlay */}
+      {showVideo && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100,
+          background: 'black',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <video
+            src="/videos/julie.mp4"
+            autoPlay
+            playsInline
+            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            onEnded={handleVideoEnd}
+          />
+          <button
+            onClick={handleVideoEnd}
+            style={{
+              position: 'absolute', top: '20px', right: '20px',
+              background: 'rgba(255,255,255,0.25)',
+              color: 'white',
+              borderRadius: '50px',
+              padding: '10px 22px',
+              fontWeight: 700, fontSize: '15px',
+              backdropFilter: 'blur(4px)',
+              border: '1.5px solid rgba(255,255,255,0.35)',
+            }}
+          >
+            דלג ←
+          </button>
+        </div>
       )}
 
       {/* Back pill */}
@@ -194,7 +217,7 @@ export function LetterView() {
               key="findTheSound"
               exit={{ opacity: 0, scale: 0.75, y: -12 }}
               transition={{ duration: 0.4, ease: [0.4, 0, 1, 1] }}
-              style={{ overflow: 'hidden', transformOrigin: 'top center' }}
+              style={{ transformOrigin: 'top center' }}
             >
               <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
               <FindTheSound
@@ -212,7 +235,7 @@ export function LetterView() {
               key="balloonPop"
               exit={{ opacity: 0, scale: 0.75, y: -12 }}
               transition={{ duration: 0.4, ease: [0.4, 0, 1, 1] }}
-              style={{ overflow: 'hidden', transformOrigin: 'top center' }}
+              style={{ transformOrigin: 'top center' }}
             >
               <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
               <BalloonPop
@@ -230,7 +253,7 @@ export function LetterView() {
               key="letterPuzzle"
               exit={{ opacity: 0, scale: 0.75, y: -12 }}
               transition={{ duration: 0.4, ease: [0.4, 0, 1, 1] }}
-              style={{ overflow: 'hidden', transformOrigin: 'top center' }}
+              style={{ transformOrigin: 'top center' }}
             >
               <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
               <LetterPuzzle
