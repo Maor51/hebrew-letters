@@ -11,6 +11,14 @@ const GRID_CONFIGS = {
 
 const DIFFICULTY_OPTIONS = [6, 8, 10, 12]
 
+// Fixed puzzle area — keeps the same overall picture size for every difficulty.
+// Pieces get smaller as difficulty rises; the assembled image stays 441×294.
+const PUZZLE_W = 441  // ≈30% larger than original 340
+const PUZZLE_H = 294  // ≈30% larger than original 226; 3:2 ratio
+
+// Generous snap: pointer just needs to land anywhere within one piece-width of the slot centre
+const SNAP_PX = 150
+
 function buildPieces(cols, rows) {
   const pieces = []
   for (let row = 0; row < rows; row++) {
@@ -36,9 +44,10 @@ export function LetterPuzzle({ letter, onComplete }) {
   const timersRef = useRef([])
   const { cols, rows } = GRID_CONFIGS[difficulty]
   const imagePath = letter.imagePaths[imageIndex]
-  const pieceSize = Math.floor(340 / cols)
-  // Allow release anywhere within ~1 piece-width of the slot center
-  const snapThreshold = pieceSize * 1.2
+
+  // Piece dimensions derived from fixed puzzle area
+  const pieceW = Math.floor(PUZZLE_W / cols)
+  const pieceH = Math.floor(PUZZLE_H / rows)
 
   useEffect(() => {
     return () => timersRef.current.forEach(clearTimeout)
@@ -62,13 +71,14 @@ export function LetterPuzzle({ letter, onComplete }) {
   const handleDragEnd = useCallback((piece, _event, info) => {
     if (piece.solved) return
 
-    // info.point is clientX/clientY (viewport-relative) captured at pointer release,
-    // before dragSnapToOrigin animation begins — safe to compare with getBoundingClientRect
-    const px = info.point.x
-    const py = info.point.y
+    // info.point uses pageX/pageY (page-relative).
+    // getBoundingClientRect() is viewport-relative.
+    // Subtract scroll to convert to the same coordinate space.
+    const px = info.point.x - window.scrollX
+    const py = info.point.y - window.scrollY
 
     let bestSlotId = null
-    let bestDist = snapThreshold
+    let bestDist = SNAP_PX
     Object.entries(slotRefs.current).forEach(([slotId, el]) => {
       if (!el) return
       const sr = el.getBoundingClientRect()
@@ -101,9 +111,12 @@ export function LetterPuzzle({ letter, onComplete }) {
         return next
       })
     }
-  }, [imageIndex, letter.imagePaths.length, onComplete, snapThreshold])  // snapThreshold depends on pieceSize/cols
+  }, [imageIndex, letter.imagePaths.length, onComplete])
 
   const solvedIds = new Set(pieces.filter((p) => p.solved).map((p) => p.id))
+
+  const bgPos = (col, row) =>
+    `${cols > 1 ? (col / (cols - 1)) * 100 : 0}% ${rows > 1 ? (row / (rows - 1)) * 100 : 0}%`
 
   return (
     <LayoutGroup>
@@ -140,7 +153,8 @@ export function LetterPuzzle({ letter, onComplete }) {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: `repeat(${cols}, ${pieceSize}px)`,
+              gridTemplateColumns: `repeat(${cols}, ${pieceW}px)`,
+              gridTemplateRows: `repeat(${rows}, ${pieceH}px)`,
               gap: '2px',
             }}
           >
@@ -155,8 +169,8 @@ export function LetterPuzzle({ letter, onComplete }) {
                   data-testid={`slot-${slotId}`}
                   ref={(el) => { slotRefs.current[slotId] = el }}
                   style={{
-                    width: pieceSize,
-                    height: pieceSize,
+                    width: pieceW,
+                    height: pieceH,
                     border: isFilled ? 'none' : '2px dashed #cbd5e1',
                     borderRadius: '4px',
                     overflow: 'hidden',
@@ -170,7 +184,7 @@ export function LetterPuzzle({ letter, onComplete }) {
                         width: '100%', height: '100%',
                         backgroundImage: `url(${imagePath})`,
                         backgroundSize: `${cols * 100}% ${rows * 100}%`,
-                        backgroundPosition: `${cols > 1 ? (col / (cols - 1)) * 100 : 0}% ${rows > 1 ? (row / (rows - 1)) * 100 : 0}%`,
+                        backgroundPosition: bgPos(col, row),
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: 'white',
                       }}
@@ -216,7 +230,7 @@ export function LetterPuzzle({ letter, onComplete }) {
         </div>
 
         {/* Piece tray */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center', minHeight: pieceSize + 12 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center', minHeight: pieceH + 12 }}>
           {pieces.filter((p) => !p.solved).map((piece) => (
             <motion.div
               key={piece.id}
@@ -228,8 +242,8 @@ export function LetterPuzzle({ letter, onComplete }) {
               onDragEnd={(_e, info) => handleDragEnd(piece, _e, info)}
               whileDrag={{ scale: 1.1, zIndex: 50, cursor: 'grabbing' }}
               style={{
-                width: pieceSize,
-                height: pieceSize,
+                width: pieceW,
+                height: pieceH,
                 borderRadius: '6px',
                 overflow: 'hidden',
                 cursor: 'grab',
@@ -237,7 +251,7 @@ export function LetterPuzzle({ letter, onComplete }) {
                 flexShrink: 0,
                 backgroundImage: imagePath ? `url(${imagePath})` : 'none',
                 backgroundSize: `${cols * 100}% ${rows * 100}%`,
-                backgroundPosition: `${cols > 1 ? (piece.col / (cols - 1)) * 100 : 0}% ${rows > 1 ? (piece.row / (rows - 1)) * 100 : 0}%`,
+                backgroundPosition: bgPos(piece.col, piece.row),
                 backgroundRepeat: 'no-repeat',
                 backgroundColor: imagePath ? 'white' : '#e2e8f0',
               }}

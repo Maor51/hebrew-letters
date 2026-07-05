@@ -21,11 +21,12 @@ function buildBalloons(letter, allLetters) {
   const distractors = shuffle(
     allLetters.filter((l) => l.id !== letter.id)
   ).slice(0, 3)
+  const xPositions = shuffle([8, 26, 54, 72])
   return shuffle([letter, ...distractors]).map((l, i) => ({
     ...l,
-    xPercent: 10 + i * 22,
-    duration: 2.5 + Math.random() * 1,
-    delay: i * 0.3,
+    xPercent: xPositions[i],
+    duration: 2.5 + Math.random() * 1.5,
+    delay: Math.random() * 0.6,
     colorIndex: i,
   }))
 }
