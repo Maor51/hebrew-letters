@@ -6,3 +6,6 @@ dist-ssr
 coverage
 .env
 .superpowers
+.claude/
+.playwright-mcp/
+push.ps1
