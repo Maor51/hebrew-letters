@@ -191,7 +191,7 @@ export function LetterView() {
                     {visibleImages.length > 1 && (
                       <>
                         <button
-                          onClick={() => setCarouselIndex((idx) => (idx - 1 + visibleImages.length) % visibleImages.length)}
+                          onClick={() => setCarouselIndex((idx) => (idx + 1) % visibleImages.length)}
                           style={{
                             position: 'absolute', left: '6px', top: '50%', transform: 'translateY(-50%)',
                             background: 'rgba(255,255,255,0.88)', borderRadius: '50%',
@@ -200,7 +200,7 @@ export function LetterView() {
                           }}
                         >‹</button>
                         <button
-                          onClick={() => setCarouselIndex((idx) => (idx + 1) % visibleImages.length)}
+                          onClick={() => setCarouselIndex((idx) => (idx - 1 + visibleImages.length) % visibleImages.length)}
                           style={{
                             position: 'absolute', right: '6px', top: '50%', transform: 'translateY(-50%)',
                             background: 'rgba(255,255,255,0.88)', borderRadius: '50%',

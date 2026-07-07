@@ -146,9 +146,18 @@ export function LetterPuzzle({ letter, onComplete }) {
       <div ref={wrapperRef} style={{ padding: '12px 0' }}>
         {showConfetti && <ReactConfetti recycle={false} numberOfPieces={200} colors={['#fb923c', '#34d399', '#a78bfa', '#f472b6', '#38bdf8']} />}
 
-        <p style={{ textAlign: 'center', fontWeight: 700, fontSize: '16px', color: '#1e293b', marginBottom: '12px' }}>
-          השלם את הפאזל!
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '12px' }}>
+          {imagePath && (
+            <img
+              src={imagePath}
+              alt=""
+              style={{ width: '44px', height: '30px', objectFit: 'cover', borderRadius: '6px', border: '1.5px solid #e2e8f0', background: 'white', flexShrink: 0 }}
+            />
+          )}
+          <p style={{ fontWeight: 700, fontSize: '16px', color: '#1e293b', margin: 0 }}>
+            השלם את הפאזל!
+          </p>
+        </div>
 
         {/* Difficulty toggle */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '16px' }}>
