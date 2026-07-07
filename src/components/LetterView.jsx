@@ -7,6 +7,7 @@ import { NavBar } from './NavBar'
 import { CARD_COLORS } from '../constants/cardColors'
 import { FindTheSound } from './games/FindTheSound'
 import { BalloonPop } from './games/BalloonPop'
+import { FindThePicture } from './games/FindThePicture'
 import { LetterPuzzle } from './games/LetterPuzzle'
 
 function playAudio(path) {
@@ -26,13 +27,14 @@ export function LetterView() {
   const [gameDone, setGameDone] = useState({
     findTheSound: false,
     balloonPop: false,
+    findThePicture: false,
     letterPuzzle: false,
   })
 
   // Reset when letter changes
   useEffect(() => {
     if (videoTimerRef.current) clearTimeout(videoTimerRef.current)
-    setGameDone({ findTheSound: false, balloonPop: false, letterPuzzle: false })
+    setGameDone({ findTheSound: false, balloonPop: false, findThePicture: false, letterPuzzle: false })
     setImgErrors(new Set())
     setShowVideo(false)
   }, [id])
@@ -45,7 +47,7 @@ export function LetterView() {
   }
 
   useEffect(() => {
-    if (gameDone.findTheSound && gameDone.balloonPop && gameDone.letterPuzzle) {
+    if (gameDone.findTheSound && gameDone.balloonPop && gameDone.findThePicture && gameDone.letterPuzzle) {
       markVisited(id)
       videoTimerRef.current = setTimeout(() => setShowVideo(true), 400)
     }
@@ -244,6 +246,24 @@ export function LetterView() {
                 letter={letter}
                 allLetters={letters}
                 onComplete={() => handleGameComplete('balloonPop')}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {!gameDone.findThePicture && (
+            <motion.div
+              key="findThePicture"
+              exit={{ opacity: 0, scale: 0.75, y: -12 }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 1, 1] }}
+              style={{ transformOrigin: 'top center' }}
+            >
+              <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
+              <FindThePicture
+                letter={letter}
+                allLetters={letters}
+                onComplete={() => handleGameComplete('findThePicture')}
               />
             </motion.div>
           )}

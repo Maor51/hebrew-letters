@@ -162,6 +162,7 @@ export function LetterPuzzle({ letter, onComplete }) {
           <div
             style={{
               display: 'grid',
+              direction: 'ltr',
               gridTemplateColumns: `repeat(${cols}, ${pieceW}px)`,
               gridTemplateRows: `repeat(${rows}, ${pieceH}px)`,
               gap: '2px',
@@ -239,7 +240,7 @@ export function LetterPuzzle({ letter, onComplete }) {
         </div>
 
         {/* Piece tray */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center', minHeight: pieceH + 12 }}>
+        <div style={{ display: 'flex', direction: 'ltr', flexWrap: 'wrap', gap: '6px', justifyContent: 'center', minHeight: pieceH + 12 }}>
           {pieces.filter((p) => !p.solved).map((piece) => (
             <motion.div
               key={piece.id}
