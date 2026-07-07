@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import letters from '../data/letters.json'
+import videos from '../data/videos.json'
 import { useProgress } from '../contexts/ProgressContext'
 import { NavBar } from './NavBar'
 import { CARD_COLORS } from '../constants/cardColors'
@@ -22,7 +23,9 @@ export function LetterView() {
   const letter = letters[letterIndex]
   const { isVisited, markVisited } = useProgress()
   const videoTimerRef = useRef(null)
+  const videoQueueRef = useRef([])
   const [showVideo, setShowVideo] = useState(false)
+  const [currentVideo, setCurrentVideo] = useState('/videos/julie.mp4')
   const [imgErrors, setImgErrors] = useState(new Set())
   const [carouselIndex, setCarouselIndex] = useState(0)
   const [gameDone, setGameDone] = useState({
@@ -51,6 +54,11 @@ export function LetterView() {
   useEffect(() => {
     if (gameDone.findTheSound && gameDone.balloonPop && gameDone.findThePicture && gameDone.letterPuzzle) {
       markVisited(id)
+      if (videoQueueRef.current.length === 0) {
+        const shuffled = [...videos].sort(() => Math.random() - 0.5)
+        videoQueueRef.current = shuffled
+      }
+      setCurrentVideo(videoQueueRef.current.pop())
       videoTimerRef.current = setTimeout(() => setShowVideo(true), 400)
     }
     // `id` intentionally omitted: on letter change, the [id] effect resets
@@ -86,7 +94,7 @@ export function LetterView() {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <video
-            src="/videos/julie.mp4"
+            src={currentVideo}
             autoPlay
             playsInline
             style={{ width: '100%', height: '100%', objectFit: 'contain' }}

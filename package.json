@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "sync-images": "node scripts/sync-images.js"
+    "sync-images": "node scripts/sync-images.js",
+    "sync-videos": "node scripts/sync-videos.js"
   },
   "dependencies": {
     "framer-motion": "^12.42.2",
