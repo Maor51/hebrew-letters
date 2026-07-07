@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
 import { CARD_COLORS } from '../../constants/cardColors'
+import { playSuccess } from '../../utils/audio'
 
 function shuffle(arr) {
   const a = [...arr]
@@ -56,6 +57,7 @@ export function FindTheSound({ letter, allLetters, onComplete }) {
   const handleTap = (option) => {
     if (correctId || doneRef.current) return
     if (option.id === letter.id) {
+      playSuccess()
       setCorrectId(option.id)
       setShowConfetti(true)
       timersRef.current.push(setTimeout(() => setShowConfetti(false), 1500))

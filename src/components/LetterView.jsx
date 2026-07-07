@@ -24,6 +24,7 @@ export function LetterView() {
   const videoTimerRef = useRef(null)
   const [showVideo, setShowVideo] = useState(false)
   const [imgErrors, setImgErrors] = useState(new Set())
+  const [carouselIndex, setCarouselIndex] = useState(0)
   const [gameDone, setGameDone] = useState({
     findTheSound: false,
     balloonPop: false,
@@ -36,6 +37,7 @@ export function LetterView() {
     if (videoTimerRef.current) clearTimeout(videoTimerRef.current)
     setGameDone({ findTheSound: false, balloonPop: false, findThePicture: false, letterPuzzle: false })
     setImgErrors(new Set())
+    setCarouselIndex(0)
     setShowVideo(false)
   }, [id])
 
@@ -66,7 +68,11 @@ export function LetterView() {
     navigate(`/letter/${letters[nextIndex].id}`)
   }
   const letterColor = CARD_COLORS[letterIndex % 5].from
-  const hasVisibleImage = letter.imagePaths.some((_, i) => !imgErrors.has(i))
+  const visibleImages = letter.imagePaths
+    .map((src, i) => ({ src, i }))
+    .filter(({ i }) => !imgErrors.has(i))
+  const clampedCarousel = Math.min(carouselIndex, Math.max(0, visibleImages.length - 1))
+  const currentImage = visibleImages[clampedCarousel] ?? null
 
   return (
     <div
@@ -159,38 +165,58 @@ export function LetterView() {
               🔊 הקש לשמוע
             </span>
 
-            <div
-              className="w-full cursor-pointer select-none"
-              onClick={() => playAudio(letter.audioWordPath)}
-            >
-              {hasVisibleImage ? (
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  {letter.imagePaths.map((src, i) =>
-                    imgErrors.has(i) ? null : (
-                      <div
-                        key={src}
-                        style={{
-                          flex: 1,
-                          minWidth: 0,
-                          height: '160px',
-                          borderRadius: '12px',
-                          overflow: 'hidden',
-                          backgroundColor: 'white',
-                        }}
-                      >
-                        <img
-                          src={src}
-                          alt={letter.word}
+            <div className="w-full select-none">
+              {currentImage ? (
+                <div>
+                  <div style={{ position: 'relative' }}>
+                    <div
+                      style={{ height: '160px', borderRadius: '12px', overflow: 'hidden', backgroundColor: 'white', cursor: 'pointer' }}
+                      onClick={() => playAudio(letter.audioWordPath)}
+                    >
+                      <img
+                        src={currentImage.src}
+                        alt={letter.word}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+                        onError={() => setImgErrors((prev) => new Set([...prev, currentImage.i]))}
+                      />
+                    </div>
+                    {visibleImages.length > 1 && (
+                      <>
+                        <button
+                          onClick={() => setCarouselIndex((idx) => (idx - 1 + visibleImages.length) % visibleImages.length)}
                           style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain',
-                            display: 'block',
+                            position: 'absolute', left: '6px', top: '50%', transform: 'translateY(-50%)',
+                            background: 'rgba(255,255,255,0.88)', borderRadius: '50%',
+                            width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.18)', fontSize: '16px', fontWeight: 700,
                           }}
-                          onError={() => setImgErrors((prev) => new Set([...prev, i]))}
+                        >‹</button>
+                        <button
+                          onClick={() => setCarouselIndex((idx) => (idx + 1) % visibleImages.length)}
+                          style={{
+                            position: 'absolute', right: '6px', top: '50%', transform: 'translateY(-50%)',
+                            background: 'rgba(255,255,255,0.88)', borderRadius: '50%',
+                            width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.18)', fontSize: '16px', fontWeight: 700,
+                          }}
+                        >›</button>
+                      </>
+                    )}
+                  </div>
+                  {visibleImages.length > 1 && (
+                    <div style={{ display: 'flex', gap: '5px', justifyContent: 'center', marginTop: '8px' }}>
+                      {visibleImages.map((_, i) => (
+                        <div
+                          key={i}
+                          onClick={() => setCarouselIndex(i)}
+                          style={{
+                            width: '7px', height: '7px', borderRadius: '50%', cursor: 'pointer',
+                            background: i === clampedCarousel ? letterColor : '#cbd5e1',
+                            transition: 'background 0.2s',
+                          }}
                         />
-                      </div>
-                    )
+                      ))}
+                    </div>
                   )}
                 </div>
               ) : (

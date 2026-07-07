@@ -73,25 +73,24 @@ describe('LetterView', () => {
     expect(JSON.parse(localStorage.getItem('alefbet-progress') || '[]')).toContain('alef')
   })
 
-  it('renders an image for each path in imagePaths', () => {
+  it('renders the first image in the carousel', () => {
     const alef = letters.find((l) => l.id === 'alef')
     if (!alef?.imagePaths.length) return  // skip if no images configured
     renderLetterView('alef')
-    const imgs = screen.getAllByRole('img')
-    expect(imgs).toHaveLength(alef.imagePaths.length)
-    alef.imagePaths.forEach((src, i) => {
-      expect(imgs[i]).toHaveAttribute('src', src)
-    })
+    const img = screen.getAllByRole('img')[0]
+    expect(img).toHaveAttribute('src', alef.imagePaths[0])
   })
 
   it('shows placeholder when all images fail to load', async () => {
     const alef = letters.find((l) => l.id === 'alef')
     if (!alef?.imagePaths.length) return  // skip if no images configured
     renderLetterView('alef')
-    const imgs = screen.getAllByRole('img')
-    await act(async () => {
-      imgs.forEach((img) => img.dispatchEvent(new Event('error')))
-    })
+    // Fire error for every image path by repeatedly triggering the error handler
+    for (let n = 0; n < alef.imagePaths.length; n++) {
+      const img = screen.queryByRole('img')
+      if (!img) break
+      await act(async () => { img.dispatchEvent(new Event('error')) })
+    }
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
     expect(screen.getByText('🖼️')).toBeInTheDocument()
   })

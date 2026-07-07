@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
+import { playSuccess } from '../../utils/audio'
 
 const GRID_CONFIGS = {
   6:  { cols: 3, rows: 2 },
@@ -11,9 +12,8 @@ const GRID_CONFIGS = {
 
 const DIFFICULTY_OPTIONS = [6, 8, 10, 12]
 
-// Fixed puzzle area — pieces get smaller as difficulty rises; assembled image stays constant.
-const PUZZLE_W = 441
-const PUZZLE_H = 294
+const MAX_PUZZLE_W = 441
+const PUZZLE_RATIO = 294 / 441
 
 function buildPieces(cols, rows) {
   const pieces = []
@@ -35,19 +35,32 @@ export function LetterPuzzle({ letter, onComplete }) {
   const [imageIndex, setImageIndex] = useState(0)
   const [pieces, setPieces] = useState(() => buildPieces(3, 2))
   const [showConfetti, setShowConfetti] = useState(false)
+  const [puzzleW, setPuzzleW] = useState(() => Math.min(MAX_PUZZLE_W, window.innerWidth - 40))
   const slotRefs = useRef({})
   const pieceRefs = useRef({})
   const lastDragRect = useRef({})
   const doneRef = useRef(false)
   const timersRef = useRef([])
+  const wrapperRef = useRef(null)
   const { cols, rows } = GRID_CONFIGS[difficulty]
   const imagePath = letter.imagePaths[imageIndex]
 
-  const pieceW = Math.floor(PUZZLE_W / cols)
-  const pieceH = Math.floor(PUZZLE_H / rows)
+  const puzzleH = Math.round(puzzleW * PUZZLE_RATIO)
+  const pieceW = Math.floor(puzzleW / cols)
+  const pieceH = Math.floor(puzzleH / rows)
 
   useEffect(() => {
     return () => timersRef.current.forEach(clearTimeout)
+  }, [])
+
+  useEffect(() => {
+    const el = wrapperRef.current
+    if (!el) return
+    const obs = new ResizeObserver(([entry]) => {
+      setPuzzleW(Math.min(MAX_PUZZLE_W, Math.floor(entry.contentRect.width)))
+    })
+    obs.observe(el)
+    return () => obs.disconnect()
   }, [])
 
   useEffect(() => {
@@ -104,6 +117,7 @@ export function LetterPuzzle({ letter, onComplete }) {
       const allSolved = next.every((p) => p.solved)
       if (allSolved && !doneRef.current) {
         doneRef.current = true
+        playSuccess()
         setShowConfetti(true)
         timersRef.current.push(setTimeout(() => setShowConfetti(false), 1500))
         const hasNextImage = imageIndex + 1 < letter.imagePaths.length
@@ -129,7 +143,7 @@ export function LetterPuzzle({ letter, onComplete }) {
       {/* Intentionally NOT dir="rtl": CSS Grid in RTL reverses columns,
           which mirrors the puzzle (col=0 slot shows left-of-image but
           renders on the right). Hebrew text renders correctly via bidi. */}
-      <div style={{ padding: '12px 0' }}>
+      <div ref={wrapperRef} style={{ padding: '12px 0' }}>
         {showConfetti && <ReactConfetti recycle={false} numberOfPieces={200} colors={['#fb923c', '#34d399', '#a78bfa', '#f472b6', '#38bdf8']} />}
 
         <p style={{ textAlign: 'center', fontWeight: 700, fontSize: '16px', color: '#1e293b', marginBottom: '12px' }}>

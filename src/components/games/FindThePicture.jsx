@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
+import { playSuccess } from '../../utils/audio'
 
 function shuffle(arr) {
   const a = [...arr]
@@ -52,6 +53,7 @@ export function FindThePicture({ letter, allLetters, onComplete }) {
     if (pickedId || doneRef.current) return
 
     if (option.isCorrect) {
+      playSuccess()
       setPickedId(option.id)
       setShowConfetti(true)
       timersRef.current.push(setTimeout(() => setShowConfetti(false), 1500))
