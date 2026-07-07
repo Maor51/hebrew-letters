@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
 import { CARD_COLORS } from '../../constants/cardColors'
-import { playBubblePop, playSuccess } from '../../utils/audio'
+import { playBubblePop } from '../../utils/audio'
 
 function shuffle(arr) {
   const a = [...arr]
@@ -67,7 +67,6 @@ export function BalloonPop({ letter, allLetters, onComplete }) {
     if (poppedId || doneRef.current) return
     playBubblePop()
     if (balloon.id === letter.id) {
-      playSuccess()
       setPoppedId(balloon.id)
       setShowConfetti(true)
       timersRef.current.push(setTimeout(() => setShowConfetti(false), 1500))

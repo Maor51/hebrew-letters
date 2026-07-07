@@ -3,5 +3,9 @@ function playSound(path) {
   audio.play().catch(() => {})
 }
 
-export const playSuccess = () => playSound('/audio/success.mp3')
+export const playSuccess = () => {
+  const audio = new Audio('/audio/success.mp3')
+  audio.volume = 0.5
+  audio.play().catch(() => {})
+}
 export const playBubblePop = () => playSound('/audio/bubble-pop.mp3')
