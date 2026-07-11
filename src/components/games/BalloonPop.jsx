@@ -26,7 +26,7 @@ function buildBalloons(letter, allLetters) {
   return shuffle([letter, ...distractors]).map((l, i) => ({
     ...l,
     xPercent: xPositions[i],
-    duration: 2.5 + Math.random() * 1.5,
+    duration: (2.5 + Math.random() * 1.5) * 1.1,
     delay: 0,
     colorIndex: i,
   }))
@@ -106,7 +106,7 @@ export function BalloonPop({ letter, allLetters, onComplete }) {
       </div>
 
       {/* Balloon field */}
-      <div style={{ position: 'relative', height: '320px', overflow: 'hidden', marginBottom: '14px' }}>
+      <div style={{ position: 'relative', height: '416px', overflow: 'hidden', marginBottom: '14px' }}>
         {balloons.map((balloon) => {
           const { from } = CARD_COLORS[balloon.colorIndex % 5]
           const isPopped = poppedId === balloon.id

@@ -156,7 +156,7 @@ export function LetterPuzzle({ letter, onComplete }) {
             <img
               src={imagePath}
               alt=""
-              style={{ width: '44px', height: '30px', objectFit: 'cover', borderRadius: '6px', border: '1.5px solid #e2e8f0', background: 'white', flexShrink: 0 }}
+              style={{ width: '80px', height: '54px', objectFit: 'cover', borderRadius: '8px', border: '1.5px solid #e2e8f0', background: 'white', flexShrink: 0 }}
             />
           )}
           <p style={{ fontWeight: 700, fontSize: '16px', color: '#1e293b', margin: 0 }}>
