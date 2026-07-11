@@ -15,6 +15,11 @@ const DIFFICULTY_OPTIONS = [6, 8, 10, 12]
 const MAX_PUZZLE_W = 441
 const PUZZLE_RATIO = 294 / 441
 
+// encodeURI leaves apostrophes unencoded, which breaks unquoted CSS url().
+// Encoding each segment separately and quoting the result handles all filenames.
+const cssUrl = (path) =>
+  `url("${path.split('/').map(encodeURIComponent).join('/')}")`
+
 function buildPieces(cols, rows) {
   const pieces = []
   for (let row = 0; row < rows; row++) {
@@ -215,7 +220,7 @@ export function LetterPuzzle({ letter, onComplete }) {
                       layoutId={`piece-${slotId}`}
                       style={{
                         width: '100%', height: '100%',
-                        backgroundImage: `url(${encodeURI(imagePath)})`,
+                        backgroundImage: cssUrl(imagePath),
                         backgroundSize: `${cols * 100}% ${rows * 100}%`,
                         backgroundPosition: bgPos(col, row),
                         backgroundRepeat: 'no-repeat',
@@ -284,7 +289,7 @@ export function LetterPuzzle({ letter, onComplete }) {
                 cursor: 'grab',
                 boxShadow: '0 3px 10px rgba(0,0,0,0.15)',
                 flexShrink: 0,
-                backgroundImage: imagePath ? `url(${encodeURI(imagePath)})` : 'none',
+                backgroundImage: imagePath ? cssUrl(imagePath) : 'none',
                 backgroundSize: `${cols * 100}% ${rows * 100}%`,
                 backgroundPosition: bgPos(piece.col, piece.row),
                 backgroundRepeat: 'no-repeat',
