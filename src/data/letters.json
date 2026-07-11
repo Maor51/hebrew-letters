@@ -23,6 +23,7 @@
     "name": "בֵּית",
     "word": "בַּיִת",
     "imagePaths": [
+      "/images/באז.png",
       "/images/בטטה.png",
       "/images/בית.png",
       "/images/במבה.png",
@@ -201,7 +202,9 @@
     "word": "מָכוֹנִית",
     "imagePaths": [
       "/images/מדוזה.png",
+      "/images/מואנה.png",
       "/images/מטוס.png",
+      "/images/מיניונים.png",
       "/images/מכונית.png",
       "/images/מפתח.png"
     ],
@@ -216,8 +219,13 @@
     "word": "נָחָשׁ",
     "imagePaths": [
       "/images/נחש.png",
+      "/images/נינגה.png",
       "/images/נמלה.png",
-      "/images/נמר.png"
+      "/images/נמר.png",
+      "/images/נסיך.png",
+      "/images/נעליים.png",
+      "/images/נקניקייה.png",
+      "/images/נשר.png"
     ],
     "audioLetterPath": "/audio/nun.mp3",
     "audioWordPath": "/audio/word-nun.mp3",
@@ -229,8 +237,11 @@
     "name": "סָמֶךְ",
     "word": "סוּס",
     "imagePaths": [
+      "/images/סולם.png",
       "/images/סוס.png",
-      "/images/סירה.png"
+      "/images/סירה.png",
+      "/images/סנדלים.png",
+      "/images/סרטן.png"
     ],
     "audioLetterPath": "/audio/samekh.mp3",
     "audioWordPath": "/audio/word-samekh.mp3",
@@ -242,6 +253,8 @@
     "name": "עַיִן",
     "word": "עֵץ",
     "imagePaths": [
+      "/images/עוגה.png",
+      "/images/עין.png",
       "/images/עכביש.png",
       "/images/עמית.png",
       "/images/ענן.png",
@@ -259,7 +272,9 @@
     "imagePaths": [
       "/images/פיל.png",
       "/images/פינגווין.png",
-      "/images/פיצה.png"
+      "/images/פיצה.png",
+      "/images/פנדה.png",
+      "/images/פרפר.png"
     ],
     "audioLetterPath": "/audio/pe.mp3",
     "audioWordPath": "/audio/word-pe.mp3",
