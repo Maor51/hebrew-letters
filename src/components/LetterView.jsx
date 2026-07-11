@@ -191,23 +191,23 @@ export function LetterView() {
                     {visibleImages.length > 1 && (
                       <>
                         <button
-                          onClick={() => setCarouselIndex((idx) => (idx - 1 + visibleImages.length) % visibleImages.length)}
+                          onClick={() => setCarouselIndex((idx) => (idx + 1) % visibleImages.length)}
                           style={{
                             position: 'absolute', left: '4px', top: '50%', transform: 'translateY(-50%)',
                             background: 'rgba(255,255,255,0.92)', borderRadius: '50%',
                             width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                             boxShadow: '0 2px 10px rgba(0,0,0,0.22)', fontSize: '24px', fontWeight: 700,
                           }}
-                        >‹</button>
+                        >›</button>
                         <button
-                          onClick={() => setCarouselIndex((idx) => (idx + 1) % visibleImages.length)}
+                          onClick={() => setCarouselIndex((idx) => (idx - 1 + visibleImages.length) % visibleImages.length)}
                           style={{
                             position: 'absolute', right: '4px', top: '50%', transform: 'translateY(-50%)',
                             background: 'rgba(255,255,255,0.92)', borderRadius: '50%',
                             width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                             boxShadow: '0 2px 10px rgba(0,0,0,0.22)', fontSize: '24px', fontWeight: 700,
                           }}
-                        >›</button>
+                        >‹</button>
                       </>
                     )}
                   </div>

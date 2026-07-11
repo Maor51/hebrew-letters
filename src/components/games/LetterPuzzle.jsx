@@ -215,7 +215,7 @@ export function LetterPuzzle({ letter, onComplete }) {
                       layoutId={`piece-${slotId}`}
                       style={{
                         width: '100%', height: '100%',
-                        backgroundImage: `url(${imagePath})`,
+                        backgroundImage: `url(${encodeURI(imagePath)})`,
                         backgroundSize: `${cols * 100}% ${rows * 100}%`,
                         backgroundPosition: bgPos(col, row),
                         backgroundRepeat: 'no-repeat',
@@ -284,7 +284,7 @@ export function LetterPuzzle({ letter, onComplete }) {
                 cursor: 'grab',
                 boxShadow: '0 3px 10px rgba(0,0,0,0.15)',
                 flexShrink: 0,
-                backgroundImage: imagePath ? `url(${imagePath})` : 'none',
+                backgroundImage: imagePath ? `url(${encodeURI(imagePath)})` : 'none',
                 backgroundSize: `${cols * 100}% ${rows * 100}%`,
                 backgroundPosition: bgPos(piece.col, piece.row),
                 backgroundRepeat: 'no-repeat',
