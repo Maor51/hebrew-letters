@@ -1,6 +1,10 @@
 @echo off
 cd /d "%~dp0"
 
+echo Syncing images and videos...
+npm run sync-images
+npm run sync-videos
+
 git add -A
 
 git status --short > "%TEMP%\gitstatus.txt" 2>&1
