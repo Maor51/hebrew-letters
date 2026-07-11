@@ -88,7 +88,8 @@
     "word": "וֶרֶד",
     "imagePaths": [
       "/images/וילון.png",
-      "/images/ורד.png"
+      "/images/ורד.png",
+      "/images/ורוד.png"
     ],
     "audioLetterPath": "/audio/vav.mp3",
     "audioWordPath": "/audio/word-vav.mp3",
@@ -101,7 +102,10 @@
     "word": "זֶבְרָה",
     "imagePaths": [
       "/images/זאב.png",
-      "/images/זברה.png"
+      "/images/זבל.png",
+      "/images/זברה.png",
+      "/images/זחל.png",
+      "/images/זיקית.png"
     ],
     "audioLetterPath": "/audio/zayin.mp3",
     "audioWordPath": "/audio/word-zayin.mp3",
@@ -113,8 +117,12 @@
     "name": "חֵית",
     "word": "חָתוּל",
     "imagePaths": [
+      "/images/חביתה.png",
       "/images/חזיר.png",
+      "/images/חלב.png",
       "/images/חלזון.png",
+      "/images/חללית.png",
+      "/images/חנוכיה.png",
       "/images/חתול.png"
     ],
     "audioLetterPath": "/audio/het.mp3",
@@ -128,7 +136,10 @@
     "word": "טַוָּס",
     "imagePaths": [
       "/images/טווס.png",
-      "/images/טלוויזיה.png"
+      "/images/טוסט.png",
+      "/images/טיס.png",
+      "/images/טלוויזיה.png",
+      "/images/טרקטור.png"
     ],
     "audioLetterPath": "/audio/tet.mp3",
     "audioWordPath": "/audio/word-tet.mp3",
@@ -141,6 +152,7 @@
     "word": "יוֹנָה",
     "imagePaths": [
       "/images/יונה.png",
+      "/images/ים.png",
       "/images/ינשוף.png",
       "/images/ירח.png"
     ],
@@ -154,7 +166,10 @@
     "name": "כַּף",
     "word": "כֶּלֶב",
     "imagePaths": [
+      "/images/כבאית.png",
+      "/images/כבשה.jpg",
       "/images/כדור.png",
+      "/images/כוכב.png",
       "/images/כלב.png",
       "/images/כריש.png"
     ],
@@ -169,7 +184,10 @@
     "word": "לֵב",
     "imagePaths": [
       "/images/לב.png",
+      "/images/לגו.png",
       "/images/לווייתן.png",
+      "/images/לחם.png",
+      "/images/לימון.png",
       "/images/ליצן.png"
     ],
     "audioLetterPath": "/audio/lamed.mp3",
@@ -182,6 +200,7 @@
     "name": "מֵם",
     "word": "מָכוֹנִית",
     "imagePaths": [
+      "/images/מדוזה.png",
       "/images/מטוס.png",
       "/images/מכונית.png",
       "/images/מפתח.png"
@@ -224,6 +243,7 @@
     "word": "עֵץ",
     "imagePaths": [
       "/images/עכביש.png",
+      "/images/עמית.png",
       "/images/ענן.png",
       "/images/עץ.png"
     ],
