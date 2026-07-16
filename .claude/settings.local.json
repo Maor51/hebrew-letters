@@ -36,7 +36,8 @@
       "Bash(git restore *)",
       "Bash(git rm *)",
       "Bash(cat vitest.config.js)",
-      "Bash(cat vite.config.js)"
+      "Bash(cat vite.config.js)",
+      "Bash(npx oxlint *)"
     ]
   }
 }

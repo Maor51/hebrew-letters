@@ -12,8 +12,19 @@ const GRID_CONFIGS = {
 
 const DIFFICULTY_OPTIONS = [6, 8, 10, 12]
 
+const MAX_PUZZLES_PER_LETTER = 5
+
 const MAX_PUZZLE_W = 441
 const PUZZLE_RATIO = 294 / 441
+
+function pickRandomImages(imagePaths, max) {
+  const shuffled = [...imagePaths]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled.slice(0, max)
+}
 
 // encodeURI leaves apostrophes unencoded, which breaks unquoted CSS url().
 // Encoding each segment separately and quoting the result handles all filenames.
@@ -38,6 +49,7 @@ function buildPieces(cols, rows) {
 export function LetterPuzzle({ letter, onComplete }) {
   const [difficulty, setDifficulty] = useState(6)
   const [imageIndex, setImageIndex] = useState(0)
+  const [sessionImages, setSessionImages] = useState(() => pickRandomImages(letter.imagePaths, MAX_PUZZLES_PER_LETTER))
   const [pieces, setPieces] = useState(() => buildPieces(3, 2))
   const [showConfetti, setShowConfetti] = useState(false)
   const [puzzleW, setPuzzleW] = useState(() => Math.min(MAX_PUZZLE_W, window.innerWidth - 40))
@@ -48,7 +60,7 @@ export function LetterPuzzle({ letter, onComplete }) {
   const timersRef = useRef([])
   const wrapperRef = useRef(null)
   const { cols, rows } = GRID_CONFIGS[difficulty]
-  const imagePath = letter.imagePaths[imageIndex]
+  const imagePath = sessionImages[imageIndex]
 
   const puzzleH = Math.round(puzzleW * PUZZLE_RATIO)
   const pieceW = Math.floor(puzzleW / cols)
@@ -75,7 +87,8 @@ export function LetterPuzzle({ letter, onComplete }) {
     setImageIndex(0)
     setDifficulty(6)
     setShowConfetti(false)
-  }, [letter.id])
+    setSessionImages(pickRandomImages(letter.imagePaths, MAX_PUZZLES_PER_LETTER))
+  }, [letter.id, letter.imagePaths])
 
   useEffect(() => {
     const { cols, rows } = GRID_CONFIGS[difficulty]
@@ -125,7 +138,7 @@ export function LetterPuzzle({ letter, onComplete }) {
         playSuccess()
         setShowConfetti(true)
         timersRef.current.push(setTimeout(() => setShowConfetti(false), 1500))
-        const hasNextImage = imageIndex + 1 < letter.imagePaths.length
+        const hasNextImage = imageIndex + 1 < sessionImages.length
         timersRef.current.push(setTimeout(() => {
           if (hasNextImage) {
             setImageIndex((i) => i + 1)
@@ -136,7 +149,7 @@ export function LetterPuzzle({ letter, onComplete }) {
       }
       return next
     })
-  }, [pieceW, pieceH, imageIndex, letter.imagePaths.length, onComplete])
+  }, [pieceW, pieceH, imageIndex, sessionImages.length, onComplete])
 
   const solvedIds = new Set(pieces.filter((p) => p.solved).map((p) => p.id))
 

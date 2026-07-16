@@ -25,6 +25,11 @@ vi.mock('./games/LetterPuzzle', () => ({
     <button onClick={onComplete} data-testid="puzzle-complete">LetterPuzzle</button>
   ),
 }))
+vi.mock('./games/AlphabetOrder', () => ({
+  AlphabetOrder: ({ onComplete }) => (
+    <button onClick={onComplete} data-testid="alphabet-complete">AlphabetOrder</button>
+  ),
+}))
 
 beforeEach(() => localStorage.clear())
 
@@ -56,7 +61,7 @@ describe('LetterView', () => {
     expect(stored).not.toContain('alef')
   })
 
-  it('marks letter as visited only after all four games complete', async () => {
+  it('marks letter as visited only after all games complete', async () => {
     renderLetterView('alef')
     expect(JSON.parse(localStorage.getItem('alefbet-progress') || '[]')).not.toContain('alef')
 
@@ -70,6 +75,9 @@ describe('LetterView', () => {
     expect(JSON.parse(localStorage.getItem('alefbet-progress') || '[]')).not.toContain('alef')
 
     await act(async () => { fireEvent.click(screen.getByTestId('puzzle-complete')) })
+    expect(JSON.parse(localStorage.getItem('alefbet-progress') || '[]')).not.toContain('alef')
+
+    await act(async () => { fireEvent.click(screen.getByTestId('alphabet-complete')) })
     expect(JSON.parse(localStorage.getItem('alefbet-progress') || '[]')).toContain('alef')
   })
 

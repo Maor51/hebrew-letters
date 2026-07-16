@@ -10,6 +10,7 @@ import { FindTheSound } from './games/FindTheSound'
 import { BalloonPop } from './games/BalloonPop'
 import { FindThePicture } from './games/FindThePicture'
 import { LetterPuzzle } from './games/LetterPuzzle'
+import { AlphabetOrder } from './games/AlphabetOrder'
 
 function playAudio(path) {
   const audio = new Audio(path)
@@ -33,12 +34,13 @@ export function LetterView() {
     balloonPop: false,
     findThePicture: false,
     letterPuzzle: false,
+    alphabetOrder: false,
   })
 
   // Reset when letter changes
   useEffect(() => {
     if (videoTimerRef.current) clearTimeout(videoTimerRef.current)
-    setGameDone({ findTheSound: false, balloonPop: false, findThePicture: false, letterPuzzle: false })
+    setGameDone({ findTheSound: false, balloonPop: false, findThePicture: false, letterPuzzle: false, alphabetOrder: false })
     setImgErrors(new Set())
     setCarouselIndex(0)
     setShowVideo(false)
@@ -52,7 +54,7 @@ export function LetterView() {
   }
 
   useEffect(() => {
-    if (gameDone.findTheSound && gameDone.balloonPop && gameDone.findThePicture && gameDone.letterPuzzle) {
+    if (gameDone.findTheSound && gameDone.balloonPop && gameDone.findThePicture && gameDone.letterPuzzle && gameDone.alphabetOrder) {
       markVisited(id)
       if (videoQueueRef.current.length === 0) {
         const shuffled = [...videos].sort(() => Math.random() - 0.5)
@@ -315,6 +317,24 @@ export function LetterView() {
               <LetterPuzzle
                 letter={letter}
                 onComplete={() => handleGameComplete('letterPuzzle')}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {!gameDone.alphabetOrder && (
+            <motion.div
+              key="alphabetOrder"
+              exit={{ opacity: 0, scale: 0.75, y: -12 }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 1, 1] }}
+              style={{ transformOrigin: 'top center' }}
+            >
+              <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />
+              <AlphabetOrder
+                letter={letter}
+                allLetters={letters}
+                onComplete={() => handleGameComplete('alphabetOrder')}
               />
             </motion.div>
           )}
